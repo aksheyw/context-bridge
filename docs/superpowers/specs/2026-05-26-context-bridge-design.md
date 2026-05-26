@@ -199,7 +199,7 @@ Steps 5, 6 (user approval), 7, 9 are project-specific in effect but procedurally
 
 ### 5.2 Wiki schema
 
-Inspired by Karpathy's LLMwiki pattern (`_index/_log/_schema/<topic>.md`). The following additions are context-bridge's own (per `references/karpathy-schema-delta.md`):
+Inspired by Karpathy's LLM Wiki pattern ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f), `_index/_log/_schema/<topic>.md`). The following additions are context-bridge's own (per `references/karpathy-schema-delta.md`):
 
 | File | Purpose | New in context-bridge? |
 |---|---|---|
@@ -298,7 +298,7 @@ Full register lives in `CREDITS.md`. Summary:
 
 | Source | Author / Holder | License | What we draw on |
 |---|---|---|---|
-| **LLMwiki pattern** | Andrej Karpathy | (idea; no formal license) | Wiki-as-compounding-knowledge concept; the `_log/_schema/<topic>` shape |
+| **LLM Wiki pattern** | Andrej Karpathy ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) | (idea / public gist; no formal license attached) | Wiki-as-compounding-knowledge concept; the `_log/_schema/<topic>` shape; LLM-maintained-vs-query-time-retrieval framing |
 | **Superpowers ecosystem** | Jesse Vincent ([obra](https://github.com/obra)) | MIT (Copyright 2025) | The brainstorming → spec → plan workflow; the "skill that explains how to use skills" pattern; the `/cb-*` slash-command structure inspiration |
 | **Claude Code** | Anthropic | proprietary CLI | The skill format, slash-command format, `.claude/` directory convention |
 | **Anthropic Skills format** | Anthropic | (format spec) | YAML frontmatter, references/, the Skill tool |

@@ -6,15 +6,17 @@ context-bridge synthesizes ideas from several places. This file names them, link
 
 ## 1. Conceptual ancestry
 
-### LLMwiki pattern — Andrej Karpathy
-The single most important idea in context-bridge is **wiki-as-compounding-knowledge**: instead of re-deriving context from raw session files, maintain a small, structured, human-readable wiki that grows as you work. Karpathy described and popularized this pattern.
+### LLM Wiki pattern — Andrej Karpathy
+The single most important idea in context-bridge is **wiki-as-compounding-knowledge**: instead of re-deriving context from raw session files (or doing query-time retrieval), have an LLM incrementally build and maintain a persistent, interlinked markdown wiki that grows richer as sources are ingested. The human curates sources and asks questions; the LLM handles the summarization, cross-referencing, and maintenance that humans typically abandon. Karpathy described and popularized this pattern.
 
-- Reference: Karpathy's public posts on X / Twitter about LLM-edited personal wikis.
-- What context-bridge inherits: the philosophical core (`_log.md` as audit trail, `_schema.md` as catalog, per-topic markdown pages).
+- **Primary reference:** [karpathy/llm-wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) — file `llm-wiki.md` (the canonical write-up).
+- What context-bridge inherits: the philosophical core (markdown wiki, append-only log, schema catalog, interlinked pages, LLM does the maintenance).
 - What context-bridge adds: see §3 below.
 
 ### "Context engineering" framing — Andrej Karpathy
 The notion of treating context windows as a budget to manage explicitly (rather than something to fill maximally) frames why this skill exists at all.
+
+Both the LLM Wiki and the context-engineering framing come from Karpathy's broader body of public writing on how to actually work productively with large language models.
 
 ---
 

@@ -18,12 +18,11 @@ Issues identified during context-bridge design. Each has: severity, status, the 
 
 ---
 
-## F2 — Pin Karpathy LLMwiki source URLs
-**Severity:** 🟢 LOW (attribution polish; doesn't block ship)
-**Status:** OPEN
-**Phase to fix:** Day 3 (before LinkedIn launch post)
-**Detail:** CREDITS.md links to Karpathy's X profile generally. Should pin specific posts about LLMwiki for proper attribution depth.
-**Mitigation:** Locate + cite his specific tweets / posts on the LLMwiki pattern.
+## F2 — Pin Karpathy LLM Wiki source URLs ✅ RESOLVED
+**Severity:** 🟢 LOW (attribution polish)
+**Status:** ✅ RESOLVED 2026-05-26 (session 2, mid-evening)
+**Resolution:** User shared the canonical gist: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f (file `llm-wiki.md`). Pinned in CREDITS.md (§1, primary reference), README.md (credits section), and spec (§5.2 + §8 attribution table). Gist verified via WebFetch — content matches the pattern context-bridge derives from.
+**Original detail:** CREDITS.md previously linked to Karpathy's X profile generically. Now points to the specific canonical write-up.
 
 ---
 

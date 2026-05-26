@@ -1,12 +1,13 @@
 ---
 title: Hot — Current Focus
 updated: 2026-05-26
-session: 1
+session: 2
 ---
 
 # 🔥 Hot — context-bridge
 
-**Session 1 closed 2026-05-26 (Tue afternoon IST).**
+**Session 2 closed 2026-05-26 (Tue evening IST, attribution patch).**
+**Session 1 closed earlier same day (afternoon IST, v0.0 shell + spec push).**
 
 ## Current phase
 

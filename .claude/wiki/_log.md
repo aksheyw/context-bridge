@@ -9,6 +9,27 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 2 — 2026-05-26 (Tue evening IST, ~10 min, post-close patch)
+
+**Phase:** Attribution polish post-session-close.
+**Outcome:** F2 closed — Karpathy LLM Wiki gist URL pinned across CREDITS, README, spec.
+
+### What was done
+1. User shared canonical gist URL: https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f
+2. Verified via WebFetch: file is `llm-wiki.md`, owned by `karpathy`, describes the wiki-as-compounding-knowledge pattern context-bridge derives from.
+3. Updated CREDITS.md §1 (primary reference now points to gist) + §2 supplementary note.
+4. Updated README.md credits section (gist link inline).
+5. Updated spec §5.2 wiki schema intro + §8 attribution table.
+6. Closed F2 in this wiki's `_findings.md`.
+7. This entry.
+
+### Nothing destructive
+- All edits surgical (specific string replacements in 5 files)
+- No deletion of prior content; gist link augments existing attribution
+- Will push as a single attribution-polish commit
+
+---
+
 ## Session 1 — 2026-05-26 (Tue afternoon IST, ~3h within parallel work)
 
 **Phase:** Brainstorm → spec → audit → v0.0 shell ship.

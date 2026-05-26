@@ -82,7 +82,7 @@ Full comparison: [`docs/vs-other-skills.md`](docs/vs-other-skills.md) (coming).
 
 context-bridge stands on shoulders. Full register: [`CREDITS.md`](CREDITS.md).
 
-- **LLMwiki pattern** — Andrej Karpathy (the wiki-as-compounding-knowledge concept)
+- **LLM Wiki pattern** — Andrej Karpathy ([gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) — the wiki-as-compounding-knowledge concept
 - **Superpowers ecosystem** — Jesse Vincent ([@obra](https://github.com/obra)) — workflow patterns + the "skill that explains how to use skills" idea
 - **Claude Code + Skills format** — Anthropic
 - Original additions by Akshey Walia: the 11-step save+sync protocol, `_hot.md`/`_findings.md`/`decisions/`/`gotchas/` wiki extensions, the handoff prompt template, the honesty rules
