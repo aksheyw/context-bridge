@@ -1,0 +1,29 @@
+# Local-only files — never commit
+
+# Author's proper-noun scrub list (gitignored per spec §9.1)
+PROPER_NOUN_SCRUB_LIST.md
+
+# Local environment + secrets
+.env
+.env.*
+!.env.example
+
+# OS junk
+.DS_Store
+Thumbs.db
+
+# Editor configs
+.vscode/settings.json
+.idea/
+
+# Personal-only wiki notes (per spec §9.3)
+.claude/wiki/*-private.md
+
+# Build artifacts (none in v0.1, but reserved)
+node_modules/
+dist/
+build/
+*.log
+
+# Local pre-commit hook state
+.husky/_/
