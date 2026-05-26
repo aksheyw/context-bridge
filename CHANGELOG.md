@@ -44,6 +44,10 @@ First public release. Working skill bundle that can be installed, initialised in
 - **TDD discipline informing save+sync gates** — Kent Beck.
 - Original to this release: 11-step save+sync protocol, `_hot.md` + `_findings.md` + `decisions/` + `gotchas/` schema additions, handoff prompt template, honesty rules. See [`CREDITS.md`](CREDITS.md) §3.
 
+### Deferred to v0.1.1
+
+- **Demo GIFs** — `docs/demos/install.gif` (30s install + bootstrap) and `docs/demos/save-sync.gif` (60s save-sync + warm resume) were scoped for v0.1 but deferred to v0.1.1. Recording-only, no behavior changes.
+
 ### Known issues
 
 - **F1** — install path verification across plugin marketplaces is still in-progress; the `npx skills add aksheyw/context-bridge` path documented in the README and `docs/install-verification.md` reflects the verified surface.

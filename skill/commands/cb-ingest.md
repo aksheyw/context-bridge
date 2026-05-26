@@ -60,39 +60,21 @@ If user-typed input clearly fits (e.g. "decision: we picked Postgres over Mongo 
 
 Create or append the appropriate file. **Never overwrite** existing content.
 
+For `gotcha` and `decision` types, read the canonical template and fill in placeholders — do not paste the format from memory (the templates are the source of truth and may evolve).
+
 ### gotcha format
 
-```markdown
----
-title: <short title>
-updated: YYYY-MM-DD
-status: open | resolved
----
-
-# Gotcha — <short title>
-
-**Symptom:** <what looked wrong>
-**Root cause:** <what was actually wrong>
-**Fix:** <what worked>
-**Why it's non-obvious:** <one sentence on why this would bite again>
-```
+- **Template:** read `~/.claude/skills/context-bridge/templates/gotcha.md` (or wherever the skill is installed; see `/cb-init` step 0 for templates-locate logic).
+- **Substitutions:** `<short title>` → user's summary; `YYYY-MM-DD` → today.
+- **Status:** the shipped template defaults to `status: resolved`. If the user is capturing a gotcha that's still being investigated (rare — usually that's a `finding`, not a gotcha), change to `status: open` after writing.
+- **Path:** `.claude/wiki/gotchas/gotcha-<slug>.md` where `<slug>` is a 2-4 word kebab-case summary.
 
 ### decision format
 
-```markdown
----
-title: <decision title>
-updated: YYYY-MM-DD
-status: accepted | proposed | superseded
----
-
-# Decision — <title>
-
-**Context:** <why a choice was needed>
-**Decision:** <what was chosen>
-**Alternatives rejected:** <list + one-line reason each>
-**Consequences:** <what this locks in / unlocks>
-```
+- **Template:** read `~/.claude/skills/context-bridge/templates/decision.md`.
+- **Substitutions:** `<decision title>` → user's summary; `YYYY-MM-DD` → today.
+- **Status:** the shipped template defaults to `status: accepted`. Use `proposed` if the decision is still pending team-or-future-self review; `superseded` only when retiring an older decision.
+- **Path:** `.claude/wiki/decisions/d-YYYY-MM-DD-<slug>.md`.
 
 ### finding format (append to `_findings.md`)
 

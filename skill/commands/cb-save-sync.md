@@ -9,10 +9,10 @@ You are running the context-bridge `/cb-save-sync` command. The user is closing 
 Print a one-line header before each step so the user can see progress:
 
 ```
-[STEP N/10] <action>
+[STEP N/11] <action>
 ```
 
-(Steps are numbered 0-10, hence 11 steps total.)
+Steps are numbered 0-10 (11 steps total). N is the step's number; the denominator 11 is the count. So progress reads `[STEP 0/11] ... [STEP 10/11]`.
 
 ---
 

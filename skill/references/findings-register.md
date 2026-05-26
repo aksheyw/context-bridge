@@ -95,7 +95,7 @@ The finding entry stays in `_findings.md` with status `✅ RESOLVED` and adds a 
 ```markdown
 ## F<id> — <title>
 **Status:** ✅ RESOLVED <date>
-**Resolution:** Fixed in <commit / decision>. Promoted to [`gotchas/gotcha-<slug>.md`](gotchas/gotcha-<slug>.md) because the root cause was non-obvious.
+**Resolution:** Fixed in <commit / decision>. Promoted to `gotchas/gotcha-<slug>.md` because the root cause was non-obvious.
 ```
 
 The gotcha page contains the full "what looked wrong / what was actually wrong / what worked / why non-obvious" detail.

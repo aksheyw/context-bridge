@@ -19,7 +19,7 @@ If something here doesn't match how the repo behaves, that's a bug — please op
 
 ## Gates — what every PR must pass
 
-All gates are also enforced in CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)). Run them locally first to avoid CI churn.
+Gates 1-3 are enforced by CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)) — a PR that fails them will block. Gates 4-7 are contributor-local checks today (CI parity is a v0.2 target). Run all seven locally before opening a PR to keep review fast.
 
 ### 1. No real secrets
 

@@ -7,7 +7,7 @@ What's supported in v0.1, what isn't, and what to do in each case.
 | OS | Status | Notes |
 |---|---|---|
 | macOS (12+) | ✅ Supported | Primary dev environment. `bash 3.2`-portable hook tested. |
-| Linux (any modern distro) | ✅ Supported | Tested on Ubuntu, Debian, Arch via WSL adapters. |
+| Linux (any modern distro) | ✅ Supported | Verified on Ubuntu (via CI). Other distros (Debian, Fedora, Arch) should work — the hook is POSIX-portable — but are not actively tested. Report issues if you find compat breakage. |
 | Windows via WSL2 | ✅ Supported | Treat as Linux. Use the Linux path conventions. |
 | Windows native (no WSL) | ❌ NOT supported in v0.1 | See [F5](#f5-windows-native). v0.2 candidate. |
 

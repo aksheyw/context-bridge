@@ -149,6 +149,18 @@ If you're not closing a session, you don't need to update it. Mid-session use `/
 
 ---
 
+### `SESSION_HANDOFF_*.md` files accumulate at my repo root. What's the cleanup policy?
+
+There isn't one in v0.1 — by design. Each handoff is a snapshot of what mattered at one session-close; older handoffs become read-only history. Three options:
+
+- **Leave them.** ~50 handoffs over a year is ~10-20MB of markdown. Manageable.
+- **Archive old ones manually.** `mkdir handoffs/archive/2026/` and move handoffs older than ~3 months. Wiki references still point at filenames; old handoff content stays browseable.
+- **Gitignore them after capture.** Add `SESSION_HANDOFF_*.md` to `.gitignore`. They become local-only artifacts. The latest one still helps you warm-resume; older ones don't travel with the repo.
+
+v0.2 may add a `/cb-archive-handoffs` command. Until then, pick the option that matches your tolerance for repo-root clutter.
+
+---
+
 ### Why "context-bridge" as a name?
 
 Each session is a context window. The skill is a bridge between consecutive context windows — what you carry from one to the next. Self-explanatory once you've used it; a little opaque before.

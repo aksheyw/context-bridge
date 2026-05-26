@@ -47,7 +47,7 @@ If your need is in that list, this is the wrong skill — and that's fine. Skill
 | `/cb-save-sync` | Run the 11-step save+sync protocol. User-gated at sensitive steps. | [commands/cb-save-sync.md](commands/cb-save-sync.md) |
 | `/cb-handoff` | Generate the next-session handoff prompt + save `SESSION_HANDOFF_<date>.md`. | [commands/cb-handoff.md](commands/cb-handoff.md) |
 
-All five commands are implemented in v0.1. Deep references (full protocol text, schema delta, migration guide) land in v0.1.1.
+All five commands are implemented in v0.1. Eight deep references are shipped in [`references/`](references/): protocol canon, handoff template, wiki structure, honesty rules, findings register, secret-scan guidance, migration playbook, and the Karpathy schema delta.
 
 ## Wiki shape
 
@@ -62,11 +62,11 @@ Bootstrapped by `/cb-init`. All filenames lowercase, dashes, no spaces.
 | `decisions/d-YYYY-MM-DD-<name>.md` | Architectural decisions. One per file. |
 | `gotchas/gotcha-<topic>.md` | Surprises + fixes. Promoted from resolved findings. |
 
-Templates live in [`templates/`](templates/). Schema delta vs. Karpathy's original LLMwiki: see [references/karpathy-schema-delta.md](references/karpathy-schema-delta.md) (v0.1 stub).
+Templates live in [`templates/`](templates/). Schema delta vs. Karpathy's original LLMwiki: see [references/karpathy-schema-delta.md](references/karpathy-schema-delta.md). Full schema with frontmatter conventions: [references/wiki-structure.md](references/wiki-structure.md).
 
 ## The 11-step save+sync protocol
 
-Full canonical text: [references/save-sync-protocol.md](references/save-sync-protocol.md) (v0.1 stub).
+Full canonical text: [references/save-sync-protocol.md](references/save-sync-protocol.md). Step 0's pattern set + rationale: [references/secret-scan-guidance.md](references/secret-scan-guidance.md).
 
 Summary:
 
@@ -111,7 +111,7 @@ Honesty: 95% confidence gate. Never fabricate paths or commands. Use Read/Grep/G
 Velocity: speed + usefulness wins. Cut scope when a gate is at risk.
 ```
 
-Full template + adaptation guidance: [references/handoff-template.md](references/handoff-template.md) (v0.1 stub).
+Full template + adaptation guidance: [references/handoff-template.md](references/handoff-template.md).
 
 ## Honesty rules (inherited by every adopter project)
 
@@ -120,7 +120,7 @@ The marked section `/cb-init` appends to `CLAUDE.md` codifies two rules:
 - **Never fabricate.** No file paths, function names, line numbers, or API signatures without verification via Read / Grep / Glob.
 - **Earned confidence.** "95% confident" requires full end-to-end homework — trace the code path, verify data shape at each boundary, check failure modes, read tests.
 
-Full rationale + examples: [references/honesty-rules.md](references/honesty-rules.md) (v0.1 stub).
+Full rationale + examples: [references/honesty-rules.md](references/honesty-rules.md).
 
 ## Findings register lifecycle
 
@@ -130,7 +130,7 @@ Each `_findings.md` entry: ID + severity + status + phase to fix + detail + miti
 - Severity: 🔴 CRITICAL / 🟡 HIGH / 🟢 MEDIUM/LOW.
 - On resolution with a non-obvious fix: promote to `gotchas/gotcha-<topic>.md`.
 
-Full schema: [references/findings-register.md](references/findings-register.md) (v0.1 stub).
+Full schema: [references/findings-register.md](references/findings-register.md).
 
 ## Adoption checklist
 
@@ -148,7 +148,7 @@ Full schema: [references/findings-register.md](references/findings-register.md) 
 - **Adopt as-is** — record current shape in `_schema.md`; no new files.
 - **Refuse** — abort cleanly; no changes made.
 
-Full guidance: [references/migration-from-existing.md](references/migration-from-existing.md) (v0.1 stub).
+Full guidance: [references/migration-from-existing.md](references/migration-from-existing.md).
 
 ## Attribution
 
