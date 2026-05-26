@@ -44,4 +44,4 @@ session: <session number>
 
 ## Lifespan
 
-Active development phase = Day 2-3 of OpenAI hackathon week (parallel work). After v0.1 ships, wiki transitions to maintenance mode.
+Active development phase = spec → v0.1 ship (target: within ~7 days of spec). After v0.1 ships, wiki transitions to maintenance mode.

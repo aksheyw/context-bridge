@@ -271,10 +271,10 @@ Each session's wiki state is a separate snapshot in `examples/ExampleApp/snapsho
 
 ## 7. Distribution + launch
 
-### 7.1 Day 2-3 ship plan
-- **Day 2 (Tue 2026-05-26):** Write spec (this file) + push README + LICENSE + CREDITS + spec to GitHub shell.
-- **Day 3 (Wed 2026-05-27):** Write skill body, templates, commands. Test on a fresh dummy project. Record both demo GIFs. Push v0.1 release.
-- **Day 3 evening:** LinkedIn launch post (after the day's primary commitment ships).
+### 7.1 v0.1 ship plan
+- **2026-05-26 (spec session):** Write spec (this file) + push README + LICENSE + CREDITS + spec to GitHub as v0.0 shell.
+- **v0.1 target (within ~7 days of spec):** Write skill body, templates, commands. Test on a fresh dummy project. Record both demo GIFs. Push v0.1 release.
+- **Post-v0.1-ship:** LinkedIn launch post.
 
 ### 7.2 Launch post outline
 - **Hook:** the friend-pain — Claude Code context bloat → hallucinations.
@@ -357,7 +357,7 @@ Report via GitHub Security Advisories on the repo. SECURITY.md documents the pro
 
 ## 11. v0.1 vs. v0.2+ scope split
 
-### 11.1 v0.1 (this week, Day 2-3)
+### 11.1 v0.1 (target: within ~7 days of spec)
 - Skill bundle + 5 slash commands
 - Templates (scrubbed) + ExampleApp with 3 sessions
 - README, CREDITS, LICENSE, CHANGELOG, CONTRIBUTING, CODE_OF_CONDUCT, SECURITY
@@ -384,10 +384,10 @@ Report via GitHub Security Advisories on the repo. SECURITY.md documents the pro
 
 | Q | Phase to resolve |
 |---|---|
-| Does `npx skills add` support community skills, or only Anthropic-hosted? | Day 3 (before publishing install command) |
-| Is `.githooks/` opt-in (via `core.hooksPath`) sufficient, or do we need a one-line install script? | Day 3 |
+| Does `npx skills add` support community skills, or only Anthropic-hosted? | Before publishing install command |
+| Is `.githooks/` opt-in (via `core.hooksPath`) sufficient, or do we need a one-line install script? | Before v0.1 ship |
 | Should `_hot.md` have a max-size cap to prevent it becoming another bloat point? | v0.2 |
-| Migration UX for users on existing `llm-wiki` setups — interactive prompt or doc? | Day 3 |
+| Migration UX for users on existing `llm-wiki` setups — interactive prompt or doc? | Before v0.1 ship |
 
 ---
 

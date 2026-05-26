@@ -9,6 +9,48 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 3 — 2026-05-26 (Tue late evening IST, ~30 min, project-decoupling pass)
+
+**Phase:** Make this project's tracked content fully self-contained — no references to any external project.
+**Outcome:** Project boundary clean. No external-project references in tracked context-bridge files.
+
+### What was done
+
+1. **Scrubbed external timing/coordination language from this project.** Edited:
+   - `docs/superpowers/specs/2026-05-26-context-bridge-design.md` §7.1 ship plan + §11.1 v0.1 scope + §12 open questions table — converted relative-day timing to absolute / project-internal language ("v0.1 target: within ~7 days of spec", "Before v0.1 ship", etc.)
+   - `.claude/wiki/_schema.md` — Lifespan line rewritten to project-internal terms
+   - `.claude/wiki/_hot.md` — removed an external-coordination section + Target Ship line referencing an external timeline; all phase columns generalized
+   - `.claude/wiki/_log.md` (Session 1) — "Nothing destructive" line rewritten to drop an external-project mention
+   - `.claude/wiki/_findings.md` — all relative-day phase entries rewritten to project-internal phases (v0.1, before announce, etc.)
+
+2. **Bootstrapped context-bridge memory directory** at `~/.claude/projects/-Users-aksheywa-Documents-Claude-Code-context-bridge/memory/`. Created 7 memory pages:
+   - `MEMORY.md` (index)
+   - `user-communication-style.md`
+   - `feedback-attribution-rigor.md` (carried over with cross-project mentions removed)
+   - `feedback-two-pass-review.md` (carried over with cross-project mentions removed)
+   - `feedback-session-end-protocol.md`
+   - `project-context-bridge.md`
+   - `reference-repo-links.md`
+   - `reference-attribution-baseline.md`
+
+3. **Verified clean.** Repo-wide grep for external-project terms returns zero matches in tracked files.
+
+4. **This entry + `_hot.md` session-counter bump.**
+
+### Why
+
+Akshey requested project boundary integrity. Each project's wiki + memory should contain only that project's content; no cross-pollination.
+
+### Nothing destructive
+
+- All edits surgical (specific string replacements)
+- No deletion of context-bridge content; only re-phrasing of timing language
+- New memory pages created; no existing content overwritten
+- Scrub was symmetric (the external project's files were independently cleaned of references to this project)
+- This commit covers all the changes above plus a Session 3 wiki entry
+
+---
+
 ## Session 2 — 2026-05-26 (Tue evening IST, ~10 min, post-close patch)
 
 **Phase:** Attribution polish post-session-close.
@@ -100,7 +142,7 @@ Initial commit `docs: initial v0.0 shell — spec, credits, license, README` pus
 ### Nothing destructive
 
 - All file operations additive (new project, new dir, new files)
-- No existing project modified (hackathon and other Sage project state untouched in context-bridge work)
+- No other projects modified during context-bridge work
 - gh CLI calls were create/edit only (no delete, no force-push, no visibility change)
 - GitHub secret-scanning + push-protection were ON when push landed (verified pre-push)
 - Spec self-review + PII scrub + secret scan all clean before commit
