@@ -19,7 +19,15 @@ If something here doesn't match how the repo behaves, that's a bug — please op
 
 ## Gates — what every PR must pass
 
-Gates 1-3 are enforced by CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)) — a PR that fails them will block. Gates 4-7 are contributor-local checks today (CI parity is a v0.2 target). Run all seven locally before opening a PR to keep review fast.
+All 7 gates are enforced by CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)) — a PR that fails them will block.
+
+Run them locally before opening a PR with one command:
+
+```bash
+scripts/verify.sh
+```
+
+That runs all 7 gates (plus a bonus SKILL.md integrity check) and prints a summary. Exit code 0 means CI will also pass; exit 1 lists the failures with file/line context.
 
 ### 1. No real secrets
 
