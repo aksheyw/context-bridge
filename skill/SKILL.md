@@ -42,12 +42,12 @@ If your need is in that list, this is the wrong skill — and that's fine. Skill
 | Command | Purpose | Reference |
 |---|---|---|
 | `/cb-init` | Pre-flight scan + scaffold wiki + append marked section to `CLAUDE.md`. | [commands/cb-init.md](commands/cb-init.md) |
-| `/cb-status` | Read `_hot.md` + print 5-bullet summary. | (v0.1 stub) |
-| `/cb-ingest` | Capture a learning into the wiki. | (v0.1 stub) |
-| `/cb-save-sync` | Run the 11-step save+sync protocol. | (v0.1 stub) |
-| `/cb-handoff` | Generate the next-session handoff prompt. | (v0.1 stub) |
+| `/cb-status` | Read `_hot.md` + print 5-bullet summary. Read-only. | [commands/cb-status.md](commands/cb-status.md) |
+| `/cb-ingest` | Capture a learning into the wiki. Routes to gotchas/decisions/findings/log. | [commands/cb-ingest.md](commands/cb-ingest.md) |
+| `/cb-save-sync` | Run the 11-step save+sync protocol. User-gated at sensitive steps. | [commands/cb-save-sync.md](commands/cb-save-sync.md) |
+| `/cb-handoff` | Generate the next-session handoff prompt + save `SESSION_HANDOFF_<date>.md`. | [commands/cb-handoff.md](commands/cb-handoff.md) |
 
-`/cb-init` is fully implemented in v0.1. The other four are stubbed; full implementations land in v0.1.1.
+All five commands are implemented in v0.1. Deep references (full protocol text, schema delta, migration guide) land in v0.1.1.
 
 ## Wiki shape
 

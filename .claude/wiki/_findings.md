@@ -53,12 +53,15 @@ Issues identified during context-bridge design. Each has: severity, status, the 
 
 ---
 
-## F6 — Secret-scan pattern coverage gap (proper nouns ≠ secrets)
+## F6 — Secret-scan pattern coverage gap (proper nouns ≠ secrets) + entropy required
 **Severity:** 🟢 MEDIUM (GitHub secret-scan handles real secrets but not project names)
 **Status:** OPEN
 **Phase to fix:** During local pre-commit hook implementation (v0.1)
 **Detail:** GitHub secret-scanning + push-protection catch API keys / tokens. They do NOT catch arbitrary proper nouns (project names like "MyApp"). Adopters need a separate local scan with a project-specific list.
-**Mitigation:** Local `.githooks/pre-commit` script does proper-noun scrub from a project-local list (gitignored).
+
+**Sub-detail discovered 2026-05-26 (Session 4):** When writing the local pre-commit hook, the secret-pattern regexes MUST require entropy after the prefix (e.g. `sk-or-v1-[A-Za-z0-9]{20,}` not bare `sk-or-v1-`). The bare-prefix patterns false-positive on the skill's own documentation in `cb-ingest.md` + `cb-save-sync.md`, which list the prefixes being scanned for. Real secret scanners (gitleaks, GitHub secret-scanning) already do this — context-bridge's hook must too, or context-bridge's own commands fail its own hook.
+
+**Mitigation:** Local `.githooks/pre-commit` script does proper-noun scrub from a project-local list (gitignored) AND uses entropy-requiring patterns for secrets.
 
 ---
 
