@@ -9,6 +9,110 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 5 — 2026-05-26 (Tue late evening + ~21:30 IST, ~2h, v0.1.0 → v0.1.1 ship + Tier 1/2/3 plan)
+
+**Phase:** Ship v0.1.0 to main + tag → second-pass review → v0.1.1 polish ship → enumerate v0.1.2/v0.2/v0.3+ best-practice gaps.
+**Outcome:** v0.1.0 + v0.1.1 both on `main` with annotated tags pushed to origin. 14 industry-best-practice gaps enumerated in `.claude/wiki/v0.1.2-plan.md` with phase assignments. All 8 gates green.
+
+### What was done — in order
+
+1. **v0.1.0 merge + tag** (commit `55c8625` on main + tag `v0.1.0`):
+   - `git merge --no-ff feature/v0.1-skill-bundle` from main, preserving the 12-commit build history.
+   - Annotated tag with full release notes mirroring CHANGELOG [0.1.0].
+   - Post-merge PII + secret scans clean on main.
+
+2. **Session paused + restarted.** No state drift; main + feature branch at expected commits.
+
+3. **Honest second-pass review.** User asked: *"Are you sure this is the best we could have created?"* — answered **no** for v0.1.0. Specific gaps: README led with caveats not value, missing personal narrative + verify-install + literal-output sections, CI overstated coverage, no success criteria.
+
+4. **User approved v0.1.1 polish** (5 of 6 items; skipped demo asset). Created `feature/v0.1.1-polish` branch.
+
+5. **User redirected:** *"Look at other open source repos for README pattern."* — pivotal correction.
+   - Fetched README content from 4 reference repos via `gh api`:
+     - `aksheyw/claude-code-deep-review`
+     - `aksheyw/claude-code-rules`
+     - `aksheyw/claude-code-learned-skills`
+     - `aksheyw/career-command-center-template`
+   - Extracted canonical pattern: Title + quote-tagline → "Why I built this" narrative → "What's in this repo" file table → "The standout" feature pitch → Install → "Verify install worked" → "Example output" (literal text) → Troubleshooting → License/security/contributing.
+   - Rewrote README following the pattern (134→197 lines).
+
+6. **`scripts/verify.sh`** — single-command local gate runner (8 gates including bonus SKILL.md integrity). Smoke-tested; caught and fixed a `grep -c` returning `"0\n0"` bash bug in real time.
+
+7. **CI parity** — extended `.github/workflows/pii-scrub-check.yml` from 4 to 8 steps. Gates 4-7 now CI-enforced (was 1-3 only). Properly fixes v0.1.0 finding F-DR4 (which was reworded in v0.1.0, properly fixed here).
+
+8. **`docs/success-criteria.md`** — explicit v0.1 success criteria. Adoption + quality + author-dogfood tripwires. Day-14 (2026-06-09) + day-30 (2026-06-25) decision points. Retrospective template.
+
+9. **CHANGELOG.md** — v0.1.1 section added with full Changed/Added/Removed/Unchanged/Deferred breakdown. Comparison links updated.
+
+10. **v0.1.1 merge + tag** (commit `442359d` on main + tag `v0.1.1`):
+    - `git merge --no-ff feature/v0.1.1-polish` from main.
+    - Annotated tag with release notes mirroring CHANGELOG [0.1.1].
+    - Post-merge `scripts/verify.sh`: 8/8 green.
+
+11. **Tier 1/2/3 best-practices recommendation** — user asked for industry-standard improvements still pending. Produced a 14-gap prioritized list:
+    - Tier 1 (7 items, ~1 hr) → v0.1.2
+    - Tier 2 (7 items, 1-3 hr each) → v0.2 / post-retro
+    - Tier 3 (6 items) → post-adoption-signal
+    - Plus 8 NON-goals explicitly excluded.
+    - Plus 9 strengths-to-preserve.
+    - All captured in `.claude/wiki/v0.1.2-plan.md`.
+
+12. **Save+sync + wiki update + handoff (THIS step)** — all 11 protocol steps; this entry; `_hot.md` Session 5 close; `v0.1.2-plan.md` created.
+
+### Decisions
+
+- **Merge style: `--no-ff` for both v0.1.0 and v0.1.1.** Preserves the build history on main; releases visible as merge commits.
+- **README canonical pattern adopted from 4 sister repos.** Author-consistent across the Claude Code skill set.
+- **Demo GIFs deferred indefinitely.** Literal-text example output in README serves as interim. Re-evaluated at day-30 retro per success-criteria.md.
+- **CI parity > rewording.** v0.1.0 reworded the CONTRIBUTING.md "all gates in CI" line to be honest. v0.1.1 actually added the missing gates so the original phrasing becomes true. The latter is the real fix.
+- **NO `feature/session-5-save-sync` branch.** Direct-to-main for docs-only changes per workflow.md Step 3 ("Push `.md` files to remote — full push only on explicit opt-in or feature branch"). All this session's wiki + memory changes are markdown.
+
+### Findings opened this session
+
+**Zero new product findings.** v0.1.1 introduced no bugs; all 14 deep-review findings from Session 4 remain closed. The 14 Tier 1/2/3 items in `v0.1.2-plan.md` are **gaps**, not findings — they're improvements, not defects.
+
+### Notable user pushes that improved the result
+
+- *"Are you sure this is the best we could have created?"* — triggered the entire second-pass review that surfaced v0.1.0's adopter-experience gaps. Without it, v0.1.0 would have been the final ship.
+- *"Look at how we have written the README for our other open source repos."* — pivotal correction. My v0.1.1 draft was reordering content but inventing a new structure. The user's instruction redirected me to study the existing pattern. The resulting rewrite is materially better than what I would have produced.
+- *"Why is roadmap added? Please remove."* — surgical correction. Roadmap section in README was premature scope-talking before adoption was real. v0.2/v0.3 scope already lives in the design spec.
+- *"If you have done your honest and thorough homework and you are 95% confident, go ahead."* — invoked the 95% gate explicitly. I responded with a pre-flight verification step (state drift check via `git ls-remote`) before any destructive action.
+- *"If you have other recommendations and improvements following industry best practices, please share."* — invited the Tier 1/2/3 enumeration. Without this prompt, the gaps would have stayed implicit.
+
+### What we LEARNED
+
+- **Look at the author's existing artifacts before writing new ones.** The user's 4 prior public Claude Code repos already established a canonical README pattern. Reinventing structure was wasted effort + worse output. Study patterns first.
+- **"Best we could have created" is a higher bar than "passes gates".** All 11 v0.1.0 gates were green; the README was still subtly worse than the author's other public work. Gates catch correctness; second-pass review catches alignment with the author's own established standards.
+- **CI parity matters more than reworded honesty.** v0.1.0 fixed F-DR4 by rewording the lie. v0.1.1 fixed F-DR4 by closing the actual gap. The latter is the real fix; the former was triage. When you find documentation drifting from reality, prefer fixing reality over rewording documentation.
+- **Define success metrics BEFORE shipping, not after.** `docs/success-criteria.md` should have been a v0.1.0 artifact. Defining it in v0.1.1 was the right move but a session late. Same lesson applies to any future project: tripwires + decision-branches go in BEFORE the launch event.
+- **The save+sync protocol works on its own dev wiki.** This Session 5 entry IS a dogfood of `/cb-save-sync` step 7. Eat your own dogfood — if running the protocol on context-bridge's own repo feels heavy, fix the protocol before shipping it.
+
+### Files changed this session
+
+- New: `.claude/wiki/v0.1.2-plan.md`
+- New: `scripts/verify.sh` (in v0.1.1 commit)
+- New: `docs/success-criteria.md` (in v0.1.1 commit)
+- Modified: `README.md` (rewrite in v0.1.1 commit)
+- Modified: `CHANGELOG.md` (v0.1.1 entry)
+- Modified: `CONTRIBUTING.md` (gates section pointer)
+- Modified: `.github/workflows/pii-scrub-check.yml` (gates 4-7 added)
+- Modified: `.claude/wiki/_hot.md` (Session 5 close)
+- Modified: `.claude/wiki/_log.md` (this entry)
+
+Two merge commits on `main`: `55c8625` (v0.1.0) and `442359d` (v0.1.1). Two annotated tags pushed: `v0.1.0`, `v0.1.1`.
+
+### Nothing destructive
+
+- All work on feature branches first; merged to main only after gate suite green.
+- `git merge --no-ff` preserved build history; no `--squash`, no rebase, no history rewrite.
+- No force pushes anywhere.
+- All wiki + memory changes are markdown-only — safe per workflow.md Step 3.
+- Pre-commit hook never bypassed; no `--no-verify` used.
+- Post-merge `scripts/verify.sh` confirmed clean state on main after each merge.
+- Two v0.0/v0.1.0/v0.1.1 tags annotated (not lightweight); pushed individually.
+
+---
+
 ## Session 4 — 2026-05-26 (Tue late-night IST, ~3.5h, full v0.1 build + deep-review)
 
 **Phase:** Complete the v0.1 skill bundle. Run deep-review pre-merge.

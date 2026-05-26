@@ -86,6 +86,10 @@ All 14 deep-review findings closed in commit `fe07468`. Captured here for tracea
 
 (No open findings. All 6 original (F1-F6) + 14 deep-review findings closed.)
 
+**Session 5 update (2026-05-26):** Zero new findings introduced by v0.1.1 polish ship. The 14 industry-best-practice gaps identified in Session 5 are tracked as **improvements**, not findings — they're roadmap items, not defects in v0.1.1. See [`v0.1.2-plan.md`](v0.1.2-plan.md) for the prioritized Tier 1/2/3 list with phase assignments.
+
+**Distinction:** a *finding* is something wrong with the shipped product (correctness, security, attribution, drift). An *improvement* is a best-practice gap where the product is correct but could be more trustworthy / discoverable / contributor-friendly. Tier 1-3 are improvements.
+
 ---
 
 ## Finding lifecycle
