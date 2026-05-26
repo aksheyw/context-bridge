@@ -1,42 +1,59 @@
 ---
 title: Hot — Current Focus
 updated: 2026-05-26
-session: 5
+session: 6
 ---
 
 # 🔥 Hot — context-bridge
 
-**Session 5 closed 2026-05-26 (Tue ~21:30 IST, ~2h, v0.1.1 polish + Tier 1/2/3 recommendation set).**
+**Session 6 closed 2026-05-26 (Tue ~22:00 IST, ~1.5h, v0.1.2 Tier 1 polish shipped + F7 + F8 surfaced and fixed).**
 
 ## Current phase
 
-**v0.1.1 shipped to main + tagged.** v0.1.0 + v0.1.1 both on `main` with annotated tags + pushed to origin. All 8 gates green via `scripts/verify.sh` (and CI mirrors them on every PR). v0.1.2 polish pass (Tier 1 = 7 small industry-best-practice gaps) queued for next session.
+**v0.1.2 shipped to main + tagged.** Three releases live on origin:
+- [v0.1.0](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.0)
+- [v0.1.1](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.1)
+- [v0.1.2](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.2) (latest)
 
-## Top tasks for next session (v0.1.2)
+All 7 Tier 1 industry-best-practice gaps closed. Matrix CI green on `ubuntu-latest` + `macos-latest`. Branch protection active on `main` requiring both matrix legs to pass. Discussions enabled.
 
-Full detail + ordering rationale: [`v0.1.2-plan.md`](v0.1.2-plan.md).
+Zero open product findings going forward. Two CI-parity findings (F7 PII-scan drift, F8 PyYAML on macOS) surfaced during the polish and were closed in-flight.
 
-1. **T1-7** — Add `.github/CODEOWNERS` (`* @aksheyw`).
-2. **T1-6** — Add `.github/FUNDING.yml` (enable Sponsor button).
-3. **T1-4** — Enable GitHub Discussions (1 click in Settings).
-4. **T1-5** — Branch protection on `main` (require `pii-scrub-check` to pass).
-5. **T1-3** — Create GitHub Releases for v0.1.0 + v0.1.1 (tags exist; Releases page empty).
-6. **T1-2** — CI matrix: add `macos-latest` to prove the macOS bash-3.2 portability claim.
-7. **T1-1** — `shellcheck .githooks/pre-commit` in CI workflow.
+## What changed in v0.1.2
 
-Total estimated wall-clock for v0.1.2: 60-90 minutes including wiki + release tag.
+| # | Item | Type |
+|---|---|---|
+| T1-7 | `.github/CODEOWNERS` | commit |
+| T1-6 | `.github/FUNDING.yml` | commit |
+| T1-4 | Discussions ON | GitHub API |
+| T1-5 | Branch protection on `main` | GitHub API |
+| T1-3 | GitHub Releases for v0.1.0 + v0.1.1 + v0.1.2 | gh CLI |
+| T1-2 | CI matrix: `macos-latest` | commit |
+| T1-1 | CI gate 8: `shellcheck .githooks/pre-commit` | commit |
+| F7 | Fix CI PII-scan drift (verify.sh self-exclusion) | commit |
+| F8 | Install PyYAML on macOS via setup-python + pip | commit |
+
+Total: 8 commits on `feature/v0.1.2-polish` + 1 merge commit on `main`.
+
+## Top tasks for next session
+
+**No automatic tasks.** Day-14 retro at 2026-06-09 is the next scheduled check; Day-30 retro at 2026-06-25 is the formal v0.1 evaluation.
+
+Between now and Day-14:
+- Watch for adoption signal (stars / clones / issues / DMs per [`docs/success-criteria.md`](../../docs/success-criteria.md)).
+- If a real bug report lands → triage + hotfix-branch path per workflow.md.
+- If silence → no premature v0.2 work. Decision-branch at Day-30 retro.
 
 ## Open blockers / questions
 
-- [ ] Should T1-2 (macOS matrix) discover a real bash-3.2 portability bug → fix before tagging v0.1.2.
-- [ ] Day-14 retro (2026-06-09) decision: keep building v0.1.x patches OR pivot to README/launch-post if no adoption signal.
-- [ ] Day-30 retro (2026-06-25): formal evaluation per [`docs/success-criteria.md`](../../docs/success-criteria.md).
+- [ ] **Day-14 retro 2026-06-09** — first signal check; decides keep-v0.1.x-patches vs pivot-to-launch-post.
+- [ ] **Day-30 retro 2026-06-25** — formal evaluation per [`docs/success-criteria.md`](../../docs/success-criteria.md). Decision-branches: graduate Tier 2 → v0.2, OR investigate friction, OR sunset.
 
 ## Risks
 
-- 🟢 LOW: Tier 1 items are independent + small; no risk of breaking v0.1.1 functionality.
-- 🟢 LOW: macOS matrix may expose a real bug in `.githooks/pre-commit` we haven't seen on Ubuntu — that's the point of adding it.
-- 🟢 LOW: v0.1.2 might still ship to an empty audience. The success-criteria.md decision branches explicitly address this case (don't ship v0.2 features into a tool no one uses; investigate friction first).
+- 🟢 LOW: v0.1.2 ships to an empty audience risk persists. Success-criteria explicitly addresses this case.
+- 🟢 LOW: Node 20 deprecation on `actions/checkout@v4` + `actions/setup-python@v5` is a non-blocking warning. Action lift required before Sept 16, 2026.
+- 🟡 LOW-MEDIUM: Branch protection requires the EXACT check-run names. If we later modify the workflow's job `name:` or matrix labels, the protection rule will silently stop gating. Documented in [`v0.1.2-plan.md`](v0.1.2-plan.md) Session 6 closeout.
 
 ## What's complete (running inventory)
 
@@ -59,9 +76,19 @@ Total estimated wall-clock for v0.1.2: 60-90 minutes including wiki + release ta
 - CONTRIBUTING.md gates section points at `scripts/verify.sh`
 - Removed README Roadmap section (premature)
 
+### v0.1.2 (2026-05-26 ~22:00 IST, tag `v0.1.2`)
+- `.github/CODEOWNERS` (`* @aksheyw`)
+- `.github/FUNDING.yml` (Sponsor button enabled)
+- Discussions enabled on repo
+- Branch protection on `main` requires both matrix check legs to pass
+- CI matrix extended to `[ubuntu-latest, macos-latest]`
+- CI gate 8: `shellcheck .githooks/pre-commit` (default severity, clean)
+- GitHub Releases for v0.1.0, v0.1.1, v0.1.2 (Releases page no longer empty)
+- F7: verify.sh added to CI's PII+secret scan exclusion lists (restores CI/local parity)
+- F8: PyYAML installed on macOS runners via setup-python + pip
+
 ## What's pending
 
-### v0.1.2 (immediate next session) — Tier 1 items 1-7 above
 ### v0.2 / post-day-30-retro — Tier 2 (bats tests, CodeQL, Dependabot, architecture diagram, social preview, issue labels, AGENTS.md)
 ### Post-adoption-signal — Tier 3 (release automation, OpenSSF, pre-commit ecosystem, localization, USED_BY, SBOM)
 

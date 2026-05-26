@@ -82,13 +82,45 @@ All 14 deep-review findings closed in commit `fe07468`. Captured here for tracea
 
 ---
 
+## F7 — CI PII-scan drift (`scripts/verify.sh` self-exclusion not mirrored in workflow) ✅ RESOLVED
+
+**Severity:** 🔴 HIGH (CI had been red on `main` since v0.1.1 ship; visible to anyone reading the GitHub UI)
+**Status:** ✅ RESOLVED 2026-05-26 (Session 6) in commit `8f6f9b0`
+**Surfaced by:** Session 6 T1-5 setup. While running `gh run list --workflow=pii-scrub-check.yml` to confirm the actual check-run name for branch protection, noticed every push to `main` since `442359d` (v0.1.1) had been failing.
+
+**Root cause:** `scripts/verify.sh` documents the secret + PII pattern lists literally (lines 49 and 84 are the pattern arrays). It excludes itself from its own scans via `:!scripts/verify.sh` in the `git grep` exclusion args. The CI workflow's exclusion lists were NOT updated to match when `verify.sh` landed in v0.1.1, so the CI scan matched on `verify.sh`'s own pattern strings as if they were live PII.
+
+**Why it was invisible locally:** local `verify.sh` excludes itself → returns 8/8 green. The drift was only visible by reading GitHub Actions UI for past runs on main. The v0.1.1 CHANGELOG legitimately claimed CI parity at the moment of merge, but the new file itself broke parity.
+
+**Resolution:** Added `:!scripts/verify.sh` to both the secret-scan and PII-scan `git grep` exclusion lists in `.github/workflows/pii-scrub-check.yml`. CI exclusions now match `verify.sh`'s self-exclusions exactly. Dispatched workflow on feature branch — green.
+
+**Prevention:** Per Session 6 lessons learned (see `v0.1.2-plan.md` closeout): every save+sync should `gh run list --branch main --workflow=... --limit 1` to confirm latest CI on main is green. NOT just local gates.
+
+---
+
+## F8 — PyYAML not pre-installed on `macos-latest` GH Actions runners ✅ RESOLVED
+
+**Severity:** 🟡 MEDIUM (matrix CI portability; surfaced by T1-2, expected risk)
+**Status:** ✅ RESOLVED 2026-05-26 (Session 6) in commit `a4f6c21`
+**Surfaced by:** Session 6 T1-2 (adding `macos-latest` to CI matrix). On first run, macOS leg failed Gate 7 with `ModuleNotFoundError: No module named 'yaml'`.
+
+**Root cause:** PyYAML is pre-installed on `ubuntu-latest` runners but not on `macos-latest`. Gate 7 (workflow YAML syntax) imports `yaml`.
+
+**Why it was invisible until T1-2:** local `verify.sh` uses `2>/dev/null` around the python3 yaml import (gate_7_hook_yaml_syntax, line ~232), silently skipping the YAML check when PyYAML is missing. Same "silent skips mask parity drift" pattern as F7. ubuntu-latest masked the difference because PyYAML happened to be there.
+
+**Resolution:** Added `actions/setup-python@v5` (`python-version: '3.x'`) followed by `python3 -m pip install --quiet pyyaml` as a setup step before any gates run. Idempotent on ubuntu (already installed); installs on macOS.
+
+**Prevention:** T2 candidate — make `verify.sh` fail loudly when PyYAML / shellcheck / python3 / etc. are missing instead of silently skipping. Tracked in `v0.1.2-plan.md` Session 6 closeout lessons.
+
+---
+
 ## Open findings
 
-(No open findings. All 6 original (F1-F6) + 14 deep-review findings closed.)
+(No open findings. All 6 original (F1-F6) + 14 deep-review findings + 2 v0.1.2-flight findings (F7, F8) closed.)
 
-**Session 5 update (2026-05-26):** Zero new findings introduced by v0.1.1 polish ship. The 14 industry-best-practice gaps identified in Session 5 are tracked as **improvements**, not findings — they're roadmap items, not defects in v0.1.1. See [`v0.1.2-plan.md`](v0.1.2-plan.md) for the prioritized Tier 1/2/3 list with phase assignments.
+**Session 6 update (2026-05-26):** Two CI parity findings (F7, F8) surfaced during v0.1.2 polish and were closed in-flight. Both pattern: local check silently skipped on missing dep; only visible via cross-machine matrix CI. T2 candidate: make local skips loud.
 
-**Distinction:** a *finding* is something wrong with the shipped product (correctness, security, attribution, drift). An *improvement* is a best-practice gap where the product is correct but could be more trustworthy / discoverable / contributor-friendly. Tier 1-3 are improvements.
+**Distinction:** a *finding* is something wrong with the shipped product (correctness, security, attribution, drift). An *improvement* is a best-practice gap where the product is correct but could be more trustworthy / discoverable / contributor-friendly. Tier 1-3 are improvements; F7 and F8 are real findings (the product silently broke something it claimed).
 
 ---
 

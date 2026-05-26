@@ -9,6 +9,114 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 6 — 2026-05-26 (Tue ~22:00 IST, ~1.5h, v0.1.2 Tier 1 polish ship + F7/F8 surfaced + closed)
+
+**Phase:** Execute the Tier 1 v0.1.2 polish queued at Session 5 close. 7 industry-best-practice items + 2 CI parity findings that surfaced mid-flight.
+**Outcome:** v0.1.2 on `main` with annotated tag pushed to origin. Matrix CI (`ubuntu-latest` + `macos-latest`) green on the merge commit. Branch protection active on `main` requiring both matrix legs to pass. GitHub Discussions enabled. GitHub Releases live for v0.1.0, v0.1.1, v0.1.2.
+
+### What was done — in order
+
+1. **Pre-flight verification** — `scripts/verify.sh` 8/8 green on `main` at `5e9aa88`. `git status` clean. Three tags already on origin (v0.0.0, v0.1.0, v0.1.1). Confirmed remote = `aksheyw/context-bridge`.
+
+2. **`feature/v0.1.2-polish` branch** created from `main` at `5e9aa88` + pushed `-u` (commit `92f7f82`+).
+
+3. **T1-7 — `.github/CODEOWNERS`** (commit `92f7f82`): single line `* @aksheyw` plus header comment with the GitHub docs link. 8/8 gates green post-commit.
+
+4. **T1-6 — `.github/FUNDING.yml`** (commit `5789e85`): `github: [aksheyw]` — Vincent's upstream sponsor link deliberately stays in `CREDITS.md` (the funding file is for THIS repo's maintainer; CREDITS handles upstream credit). YAML parsed locally before commit.
+
+5. **T1-4 — GitHub Discussions enabled** via `gh repo edit aksheyw/context-bridge --enable-discussions=true`. Verified `hasDiscussionsEnabled: true`. No commit (Settings change only).
+
+6. **CRITICAL FIND: F7 — CI red on main since v0.1.1.** During T1-5 setup, I ran `gh run list --workflow=pii-scrub-check.yml` to verify the check-run name (`secret + PII scan (repo-wide)`) before applying branch protection. Discovered every push to `main` since `442359d` had been **failing CI** — but `scripts/verify.sh` was 8/8 green locally. Root cause: `verify.sh` adds `:!scripts/verify.sh` to its own scan exclusions (lines 49, 84) because it documents the pattern lists literally, but the CI workflow's exclusion lists were not updated to match when `verify.sh` landed in v0.1.1. The "CI parity" claim in v0.1.1's CHANGELOG was true on paper but the new file itself broke parity.
+   - **Fixed in commit `8f6f9b0`**: added `:!scripts/verify.sh` to both `git grep` exclusion lists in the workflow. CI dispatched on feature branch via `workflow_dispatch` → green. F7 closed.
+
+7. **T1-5 — Branch protection on `main`** via `gh api -X PUT .../protection`. Initially required check `secret + PII scan (repo-wide)`. Required configuration: `enforce_admins: false` (solo maintainer can still ship); `allow_force_pushes: false`; `allow_deletions: false`.
+
+8. **T1-3 — GitHub Releases for v0.1.0 + v0.1.1**:
+   - Extracted CHANGELOG sections via `awk` for verbatim release notes.
+   - `gh release create v0.1.0 --notes-file ... --target main`
+   - `gh release create v0.1.1 --notes-file ... --target main --latest`
+   - Verified via `gh release list`: v0.1.1 marked Latest until v0.1.2.
+
+9. **T1-2 — CI matrix: `macos-latest`** (commit `a10fe62`): added `strategy.matrix.os: [ubuntu-latest, macos-latest]` + `fail-fast: false`. Pushed + dispatched → **macOS FAILED** with `ModuleNotFoundError: No module named 'yaml'`. Predicted in the matrix-is-portability-claim risk; this is the exact value of T1-2.
+
+10. **F8 — PyYAML not pre-installed on macOS runners** (commit `a4f6c21`): added `actions/setup-python@v5` + `python3 -m pip install --quiet pyyaml` step. Note: local `verify.sh` silently skips the PyYAML check when missing — that's the same "silent skip masks parity drift" pattern that bit F7. Dispatched → both matrix legs green. F8 closed.
+
+11. **Branch protection update**: matrix adds suffix to check-run names. Updated required checks to `[secret + PII scan (repo-wide) (ubuntu-latest), secret + PII scan (repo-wide) (macos-latest)]`. Old name `secret + PII scan (repo-wide)` no longer exists as a check; the rule would have silently stopped gating if not updated.
+
+12. **T1-1 — `shellcheck .githooks/pre-commit`** (commit `f3aeadf`): added as Gate 8 in workflow. First dispatch → macOS failed (`shellcheck` NOT pre-installed despite Linux being). Added conditional brew install step (`if: runner.os == 'macOS'`) in commit `39d7b8a`. Re-dispatched → both matrix legs green. Hook is shellcheck-clean at default severity.
+
+13. **CHANGELOG.md [0.1.2] entry** (commit `3e51367`): Added/Fixed/Unchanged/Known-follow-ups breakdown. Comparison links updated.
+
+14. **v0.1.2 merge + tag** (commit `5e629ee` on main + tag `v0.1.2`):
+    - `git merge --no-ff feature/v0.1.2-polish` from main.
+    - Annotated tag with release notes via `awk`-extracted CHANGELOG.
+    - `gh release create v0.1.2 --target main --latest`.
+    - Push to main triggered CI; both matrix legs green at `5e629ee`.
+
+15. **Save+sync + wiki update + handoff (THIS step)** — _hot.md, _log.md, v0.1.2-plan.md closeout, _findings.md F7+F8, memory pages, this handoff doc.
+
+### Decisions
+
+- **Feature branch for v0.1.2 polish.** Mirrors v0.1.0 and v0.1.1 release pattern (`--no-ff` merge + annotated tag on merge commit). Cleaner audit trail than direct-to-main for OSS-hygiene multi-commit work.
+- **F7 + F8 fixed in-flight, not deferred to a follow-up patch.** Per velocity rule from Session 5 handoff: "If T1-2 (macOS matrix) discovers a real bash bug → fix before tagging v0.1.2." F7 is a bigger issue (CI red on main); F8 is the exact-fit T1-2 surface.
+- **Branch protection requires BOTH matrix check names.** Required-check string must match the matrix-suffixed name; the bare workflow name will never appear as a check after the matrix landed.
+- **`enforce_admins: false`** intentionally — solo maintainer can still direct-push to main. Future contributor PRs are gated by the check requirement. Re-evaluate at Day-30 retro if multi-contributor pattern emerges.
+- **shellcheck CI-only (not in `verify.sh`).** Most macOS developers don't have shellcheck installed; adding to `verify.sh` would make `verify.sh` red on dev machines. T2-1 (bats tests) is a better local-CI parity addition; tracked in `v0.1.2-plan.md`.
+
+### Findings opened this session
+
+| # | Title | Severity | Status | Resolution commit |
+|---|---|---|---|---|
+| **F7** | CI PII-scan drift: verify.sh missing from exclusion list | HIGH (CI red on main since v0.1.1) | ✅ RESOLVED | `8f6f9b0` |
+| **F8** | PyYAML not pre-installed on macOS GH Actions runners | MEDIUM (matrix CI portability) | ✅ RESOLVED | `a4f6c21` |
+
+Plus 1 NOTABLE observation (not a finding):
+- **Node 20 deprecation warning** on `actions/checkout@v4` + `actions/setup-python@v5`. Non-blocking until Sept 16, 2026. Track in `v0.1.2-plan.md` Tier 2 list.
+
+### Notable user pushes that improved the result
+
+- **"Stick with plan order"** + **"Verbatim from CHANGELOG"** + **"Active co-pilot"** — clear pre-flight decisions enabled end-to-end execution without mid-flight clarification trips. The crisp answer pattern (recommended option + one-line rationale) lined up perfectly with the v0.1.2-plan.md priorities.
+- **The pre-flight `git ls-remote --tags` + state-drift check** from the handoff prompt caught nothing this session — but the discipline of running it is what let me trust subsequent operations. Cheap insurance.
+
+### What we LEARNED
+
+- **"CI parity" is verify-the-actual-CI-state, not write-the-claim.** v0.1.1 CHANGELOG legitimately claimed CI parity — at the moment of merge — but `scripts/verify.sh` itself excluded itself from local scans, and that self-exclusion never got mirrored to CI. The drift was invisible until the FIRST cross-machine check (matrix CI on a different runner type, or in this case, just looking at the GitHub Actions UI for past runs). Lesson: every save+sync should `gh run list --branch main --workflow=... --limit 1` to confirm latest CI on main is green. NOT just local gates.
+- **Silent skips mask parity drift.** Both F7 and F8 had the same pathological pattern: local `verify.sh` silently skipped a check when the dependency was unavailable (`:! scripts/verify.sh` for F7; `2>/dev/null` swallowing the PyYAML import error for F8). Silent skips → local green, CI red, invisible until matrix CI runs. Future improvement: failures-should-be-loud locally too. T2-1 candidate.
+- **Adding files to `scripts/verify.sh` is a CI-parity hazard.** Whenever new files document the secret/PII pattern lists for transparency, BOTH `verify.sh` AND the CI workflow exclusion lists must be updated. Codify: the workflow exclusions are the authoritative list; `verify.sh` derives from it.
+- **The matrix-suffix gotcha for branch protection.** When a job runs on `${{ matrix.os }}`, GitHub renames the check from `<job-name>` to `<job-name> (<matrix-value>)`. Branch protection rules that referenced the un-suffixed name silently stop gating. This was almost a silent breakage — saved by reading `gh api .../check-runs --jq '.check_runs[].name'` BEFORE applying the matrix.
+- **`workflow_dispatch` is the right mid-flight CI loop.** The original workflow only triggered on push/PR-to-main, so the feature branch didn't auto-CI. `workflow_dispatch:` enabled `gh workflow run ... --ref feature/v0.1.2-polish` + `gh run watch <id> --interval 8 --exit-status` for a tight read-eval-loop. Without this, each iteration would have required a synthetic commit.
+
+### Files changed this session
+
+| Path | Change |
+|---|---|
+| `.github/CODEOWNERS` | NEW |
+| `.github/FUNDING.yml` | NEW |
+| `.github/workflows/pii-scrub-check.yml` | extended — F7 exclusion + matrix + setup-python + brew shellcheck + Gate 8 |
+| `CHANGELOG.md` | [0.1.2] entry added |
+| `.claude/wiki/_hot.md` | Session 6 close — v0.1.2 shipped |
+| `.claude/wiki/_log.md` | this entry |
+| `.claude/wiki/_findings.md` | F7 + F8 entries added (RESOLVED) |
+| `.claude/wiki/v0.1.2-plan.md` | Session 6 closeout block — Tier 1 marked complete |
+| `~/.claude/projects/.../memory/project-context-bridge.md` | status table updated |
+| `~/.claude/projects/.../memory/MEMORY.md` | entry updated |
+| `SESSION_HANDOFF_2026-05-26-2200.md` | NEW |
+
+Two merge commits on `main`: previously `442359d` (v0.1.1) and now `5e629ee` (v0.1.2). Three annotated tags pushed: v0.1.0, v0.1.1, v0.1.2.
+
+### Nothing destructive
+
+- All Tier 1 work on `feature/v0.1.2-polish` first; merged to `main` only after CI matrix green on the feature branch.
+- `git merge --no-ff` preserved build history.
+- Branch protection rule activated AFTER F7 fix + matrix CI green confirmed; never tried to enable protection while the required check was red.
+- `enforce_admins: false` deliberate (solo maintainer); not bypassed.
+- No force pushes anywhere.
+- Pre-commit hook never bypassed; no `--no-verify` used.
+- Post-merge matrix CI (`5e629ee` on main) confirmed both legs green.
+- `gh release create` used existing tags; no tag was moved or deleted.
+
+---
+
 ## Session 5 — 2026-05-26 (Tue late evening + ~21:30 IST, ~2h, v0.1.0 → v0.1.1 ship + Tier 1/2/3 plan)
 
 **Phase:** Ship v0.1.0 to main + tag → second-pass review → v0.1.1 polish ship → enumerate v0.1.2/v0.2/v0.3+ best-practice gaps.
