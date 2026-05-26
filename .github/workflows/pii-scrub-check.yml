@@ -252,12 +252,21 @@ jobs:
           fi
           echo "Hook + workflow syntax gate OK."
 
+      - name: Install shellcheck (macOS only — ubuntu has it pre-installed)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          if command -v shellcheck >/dev/null 2>&1; then
+            echo "shellcheck already installed; skipping brew."
+          else
+            brew install shellcheck
+          fi
+
       - name: Shellcheck on pre-commit hook (gate 8)
         shell: bash
         # bash -n only catches syntax errors. shellcheck catches semantic bugs
         # (unquoted vars, broken array expansions, fragile pipes) of the same
         # class as the grep -c bug we hit in scripts/verify.sh during v0.1.1.
-        # Pre-installed on both ubuntu-latest and macos-latest runners.
         run: |
           set -euo pipefail
           if [ ! -f .githooks/pre-commit ]; then
