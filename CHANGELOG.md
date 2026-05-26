@@ -8,6 +8,46 @@ All notable changes to context-bridge are documented here. The format follows [K
 
 ---
 
+## [0.1.1] — 2026-05-26
+
+Same-day polish pass on v0.1.0. No behavior changes to any slash command; no API or schema changes; no template changes. v0.1.1 fixes adopter-experience and contributor-experience gaps surfaced by a second-pass review of the v0.1.0 surfaces.
+
+### Changed
+
+- **README rewrite** — restructured to match the canonical README pattern used across the author's other public Claude Code repos ([`claude-code-deep-review`](https://github.com/aksheyw/claude-code-deep-review), [`claude-code-rules`](https://github.com/aksheyw/claude-code-rules), [`claude-code-learned-skills`](https://github.com/aksheyw/claude-code-learned-skills), [`career-command-center-template`](https://github.com/aksheyw/career-command-center-template)). New sections:
+  - "Why I built this" — personal narrative explaining the cross-session-amnesia problem in concrete terms.
+  - "What's in this repo" — file table with line counts so adopters can scan the surface in 10 seconds.
+  - "The standout: handoff prompts + honesty rules" — promotes the killer feature (CLAUDE.md honesty section embedding) above the install instructions.
+  - "Verify install worked" — explicit verification steps following install, matching the convention from the author's other skill repos.
+  - "Example output" — literal rendered `/cb-handoff` output drawn from `examples/ExampleApp/SESSION_HANDOFF_2026-05-25.md`, so adopters can evaluate value-proposition without installing.
+  - "Troubleshooting" — 5 common-failure cases with fixes.
+- **CONTRIBUTING.md** — gates section now points adopters at `scripts/verify.sh` (one command) instead of listing 7 separate commands. Removed the "gates 4-7 are local-only" caveat now that CI enforces all 7.
+
+### Added
+
+- **`scripts/verify.sh`** — single-command local gate runner. Runs all 7 contributor gates (secrets, PII, SKILL.md size, Karpathy gist linked, cross-links resolve, frontmatter present, hook + workflow syntax) plus a bonus SKILL.md integrity check. Exits 0 on all-green; lists failures with file/line context on red.
+- **CI parity** — `.github/workflows/pii-scrub-check.yml` extended from 4 steps to 8. New steps enforce gates 4-7 (Karpathy gist linked, cross-links resolve, frontmatter present, hook + workflow syntax). CI now mirrors what `scripts/verify.sh` runs locally; CONTRIBUTING.md's "all gates enforced in CI" claim is now true.
+- **`docs/success-criteria.md`** — explicit v0.1 success criteria with adoption / quality / author-dogfood targets, day-14 and day-30 decision points, and a retrospective template. Without this, "did v0.1 work?" is a vibes question.
+
+### Removed
+
+- **README "Roadmap" section** — premature for v0.1; v0.2 / v0.3 scope lives in [`docs/superpowers/specs/2026-05-26-context-bridge-design.md`](docs/superpowers/specs/2026-05-26-context-bridge-design.md) §11.2-11.3 where it belongs.
+
+### Unchanged
+
+- Skill body (`skill/SKILL.md` is still 169 / 200 lines).
+- All 5 slash commands (`cb-init`, `cb-status`, `cb-ingest`, `cb-save-sync`, `cb-handoff`) — no behavior changes.
+- All 7 templates and 8 references — no changes.
+- Pre-commit hook (`.githooks/pre-commit`) — no changes.
+- ExampleApp — no changes; v0.1.1 README references its existing content.
+- All v0.1.0 findings status — F1/F2/F4/F6 RESOLVED, F3 ACCEPTED, F5 DEFERRED unchanged.
+
+### Still deferred to a future patch
+
+- **Demo GIFs** — `docs/demos/install.gif` and `docs/demos/save-sync.gif`. v0.1.1 promotes the literal-text example output in the README as a viable interim. Recording GIFs deferred indefinitely; will ship if and when adoption signal warrants it (see `docs/success-criteria.md`).
+
+---
+
 ## [0.1.0] — 2026-05-26
 
 First public release. Working skill bundle that can be installed, initialised in a project, and used through a full session loop.
@@ -80,6 +120,7 @@ Repo bootstrap. No installable skill yet.
 ### Notes
 - This release is for record-keeping. The first usable artifact is v0.1.0.
 
-[Unreleased]: https://github.com/aksheyw/context-bridge/compare/v0.1.0...HEAD
+[Unreleased]: https://github.com/aksheyw/context-bridge/compare/v0.1.1...HEAD
+[0.1.1]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.0
 [0.0.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.0.0

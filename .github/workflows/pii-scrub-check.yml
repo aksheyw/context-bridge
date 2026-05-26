@@ -130,3 +130,100 @@ jobs:
             exit 1
           fi
           echo "Line-count gate OK."
+
+      - name: Karpathy gist linked on every mention (gate 4)
+        shell: bash
+        run: |
+          set -euo pipefail
+          GIST='https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f'
+          ORPHANS=0
+          while IFS= read -r f; do
+            [ -z "$f" ] && continue
+            if ! grep -qF "$GIST" "$f"; then
+              echo "::error file=$f::file mentions Karpathy but doesn't link the canonical gist ($GIST)"
+              ORPHANS=$((ORPHANS+1))
+            fi
+          done < <(git grep -li 'karpathy' -- 'skill/**' 'docs/**' 'examples/**' 'README.md' 'CREDITS.md' 'CHANGELOG.md' 2>/dev/null || true)
+          if [ "$ORPHANS" -gt 0 ]; then
+            echo "Karpathy-link gate FAILED: $ORPHANS file(s) mention Karpathy without linking the gist."
+            exit 1
+          fi
+          echo "Karpathy-link gate OK."
+
+      - name: Relative cross-links resolve (gate 5)
+        shell: bash
+        run: |
+          set -euo pipefail
+          python3 << 'PY'
+          import os, re, sys
+          base = os.getcwd()
+          broken = []
+          checked = 0
+          for root, dirs, files in os.walk(base):
+              if '/.git' in root or 'examples/ExampleApp/snapshots' in root or 'node_modules' in root:
+                  continue
+              for f in files:
+                  if not f.endswith('.md'): continue
+                  path = os.path.join(root, f)
+                  try:
+                      with open(path, 'r', errors='replace') as fh: content = fh.read()
+                  except Exception:
+                      continue
+                  for m in re.finditer(r'\]\(([^)]+)\)', content):
+                      link = m.group(1).strip()
+                      if link.startswith(('http://', 'https://', 'mailto:', '#')): continue
+                      lc = link.split('#')[0].split('?')[0]
+                      if not lc: continue
+                      if '/' not in lc and not lc.endswith(('.md', '.yml', '.yaml', '.gif', '.snippet', '.sh', '.png', '.jpg')):
+                          continue
+                      checked += 1
+                      resolved = os.path.normpath(os.path.join(os.path.dirname(path), lc))
+                      if not os.path.exists(resolved):
+                          broken.append((os.path.relpath(path, base), link))
+          if broken:
+              for src, lk in broken:
+                  print(f"::error file={src}::broken cross-link: {lk}")
+              print(f"\nCross-link gate FAILED: {len(broken)} / {checked} broken.")
+              sys.exit(1)
+          print(f"Cross-link gate OK ({checked} relative links resolve).")
+          PY
+
+      - name: Frontmatter on SKILL.md + commands (gate 6)
+        shell: bash
+        run: |
+          set -euo pipefail
+          MISSING=0
+          for f in skill/SKILL.md skill/commands/*.md; do
+            [ -f "$f" ] || continue
+            if [ "$(head -1 "$f")" != "---" ]; then
+              echo "::error file=$f::missing YAML frontmatter (first line must be '---')"
+              MISSING=$((MISSING+1))
+            fi
+          done
+          if [ "$MISSING" -gt 0 ]; then
+            echo "Frontmatter gate FAILED: $MISSING file(s) missing."
+            exit 1
+          fi
+          echo "Frontmatter gate OK."
+
+      - name: Hook + workflow syntax (gate 7)
+        shell: bash
+        run: |
+          set -euo pipefail
+          ERRORS=0
+          if [ -f .githooks/pre-commit ]; then
+            if ! bash -n .githooks/pre-commit; then
+              echo "::error file=.githooks/pre-commit::bash syntax error"
+              ERRORS=$((ERRORS+1))
+            fi
+          fi
+          # YAML self-check via PyYAML
+          if ! python3 -c "import yaml; yaml.safe_load(open('.github/workflows/pii-scrub-check.yml'))"; then
+            echo "::error file=.github/workflows/pii-scrub-check.yml::YAML parse error"
+            ERRORS=$((ERRORS+1))
+          fi
+          if [ "$ERRORS" -gt 0 ]; then
+            echo "Hook + workflow syntax gate FAILED: $ERRORS error(s)."
+            exit 1
+          fi
+          echo "Hook + workflow syntax gate OK."
