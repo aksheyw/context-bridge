@@ -96,16 +96,16 @@ Target: 150-250 lines total. Omit sections with no content — don't print `(non
 
 ---
 
-## Worked example (fictional ExampleApp)
+## Worked example (fictional ExampleApp — mirrors `examples/ExampleApp/SESSION_HANDOFF_2026-05-25.md`)
 
 ```
-I'm continuing the ExampleApp work. Last session closed 2026-05-26.
+I'm continuing the ExampleApp work. Last session closed 2026-05-25.
 
 Read these in order, fast:
 1. .claude/wiki/_hot.md
 2. .claude/wiki/_log.md (most recent session entry only)
 3. .claude/wiki/_findings.md
-4. SESSION_HANDOFF_2026-05-26.md (this file — full handoff context)
+4. SESSION_HANDOFF_2026-05-25.md (this file — full handoff context)
 
 Then summarize back to me in 5 bullets:
 - What we're building + who it's for + who it's NOT for
