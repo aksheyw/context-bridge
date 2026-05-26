@@ -1,0 +1,163 @@
+#!/usr/bin/env bash
+#
+# context-bridge pre-commit hook
+# ----------------------------------------------------------------------
+# Scans staged content for:
+#   1. Secrets (entropy-required patterns — see secret-scan-guidance.md)
+#   2. Project-specific proper nouns from .cb-scrub-list (gitignored)
+#
+# Blocks the commit on any hit. Does NOT modify files.
+#
+# To enable in a project:
+#   git config core.hooksPath .githooks
+#
+# To bypass for a single commit (not recommended):
+#   git commit --no-verify
+# ----------------------------------------------------------------------
+
+set -euo pipefail
+
+REPO_ROOT="$(git rev-parse --show-toplevel)"
+cd "$REPO_ROOT"
+
+# Colour helpers (no colour if stdout is not a tty)
+if [ -t 1 ]; then
+  RED=$'\033[0;31m'
+  YELLOW=$'\033[0;33m'
+  GREEN=$'\033[0;32m'
+  RESET=$'\033[0m'
+else
+  RED=""; YELLOW=""; GREEN=""; RESET=""
+fi
+
+# ----------------------------------------------------------------------
+# Get list of staged text files (added / copied / modified)
+# Portable to macOS bash 3.2 (no mapfile / readarray).
+# ----------------------------------------------------------------------
+STAGED=()
+while IFS= read -r line; do
+  STAGED+=("$line")
+done < <(git diff --cached --name-only --diff-filter=ACM)
+
+if [ "${#STAGED[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+# Filter to text files only — skip binaries
+TEXT_FILES=()
+for f in "${STAGED[@]}"; do
+  # Skip if file no longer exists (deleted in working tree but still staged — unusual)
+  [ -f "$f" ] || continue
+  # Use file -b to detect text/* mimes — if missing, fall back to extension allowlist
+  if command -v file >/dev/null 2>&1; then
+    mime="$(file -b --mime-type "$f" 2>/dev/null || echo unknown)"
+    case "$mime" in
+      text/*|application/json|application/xml|application/x-yaml|inode/x-empty)
+        TEXT_FILES+=("$f") ;;
+      *) ;;
+    esac
+  else
+    case "$f" in
+      *.md|*.txt|*.json|*.yml|*.yaml|*.sh|*.py|*.js|*.ts|*.tsx|*.jsx|*.html|*.css|*.snippet|*.conf|*.toml|*.ini|*.env|*.gitignore|Dockerfile|Makefile|*.lock)
+        TEXT_FILES+=("$f") ;;
+    esac
+  fi
+done
+
+if [ "${#TEXT_FILES[@]}" -eq 0 ]; then
+  exit 0
+fi
+
+# ----------------------------------------------------------------------
+# Secret patterns — entropy required after prefix
+# Pattern set from skill/references/secret-scan-guidance.md
+# ----------------------------------------------------------------------
+SECRET_PATTERNS=(
+  'sk-or-v1-[A-Za-z0-9]{20,}'
+  'sk-[A-Za-z0-9]{30,}'
+  'ghp_[A-Za-z0-9]{30,}'
+  'gho_[A-Za-z0-9]{30,}'
+  'ghs_[A-Za-z0-9]{30,}'
+  'eyJ[A-Za-z0-9_=-]{10,}\.[A-Za-z0-9_=-]{10,}\.[A-Za-z0-9_=-]{20,}'
+  '[0-9]{8,12}:[A-Za-z0-9_-]{30,50}'
+  'AKIA[A-Z0-9]{16}'
+  'ASIA[A-Z0-9]{16}'
+  'BEGIN [A-Z]+ PRIVATE KEY'
+)
+
+# ----------------------------------------------------------------------
+# Scan staged content (not working-tree content)
+# ----------------------------------------------------------------------
+HITS=0
+
+for f in "${TEXT_FILES[@]}"; do
+  # Read the staged version (so we scan what's actually being committed)
+  staged_content="$(git show ":$f" 2>/dev/null || true)"
+  [ -z "$staged_content" ] && continue
+
+  # Secret scan
+  for pat in "${SECRET_PATTERNS[@]}"; do
+    match="$(printf '%s\n' "$staged_content" | grep -nE "$pat" || true)"
+    if [ -n "$match" ]; then
+      while IFS= read -r line; do
+        line_no="${line%%:*}"
+        line_text="${line#*:}"
+        echo "${RED}✘ SECRET pattern matched${RESET} in ${YELLOW}$f${RESET} (line $line_no)"
+        echo "    pattern : $pat"
+        echo "    line    : ${line_text:0:120}"
+        HITS=$((HITS+1))
+      done <<< "$match"
+    fi
+  done
+done
+
+# ----------------------------------------------------------------------
+# Proper-noun scan (only if .cb-scrub-list exists)
+# ----------------------------------------------------------------------
+if [ -f .cb-scrub-list ]; then
+  # Read patterns, strip comments + blanks (portable to bash 3.2 — no mapfile)
+  SCRUB_PATTERNS=()
+  while IFS= read -r line; do
+    SCRUB_PATTERNS+=("$line")
+  done < <(grep -vE '^[[:space:]]*(#|$)' .cb-scrub-list || true)
+
+  for f in "${TEXT_FILES[@]}"; do
+    staged_content="$(git show ":$f" 2>/dev/null || true)"
+    [ -z "$staged_content" ] && continue
+
+    for pat in "${SCRUB_PATTERNS[@]}"; do
+      # Skip empty patterns
+      [ -z "$pat" ] && continue
+      match="$(printf '%s\n' "$staged_content" | grep -nF "$pat" || true)"
+      if [ -n "$match" ]; then
+        while IFS= read -r line; do
+          line_no="${line%%:*}"
+          line_text="${line#*:}"
+          echo "${RED}✘ SCRUB pattern matched${RESET} in ${YELLOW}$f${RESET} (line $line_no)"
+          echo "    pattern : $pat (from .cb-scrub-list)"
+          echo "    line    : ${line_text:0:120}"
+          HITS=$((HITS+1))
+        done <<< "$match"
+      fi
+    done
+  done
+fi
+
+# ----------------------------------------------------------------------
+# Result
+# ----------------------------------------------------------------------
+if [ "$HITS" -gt 0 ]; then
+  echo
+  echo "${RED}context-bridge pre-commit: $HITS hit(s). Commit blocked.${RESET}"
+  echo
+  echo "Options:"
+  echo "  • Real secret  → remove from the file, rotate the value if it was ever committed."
+  echo "  • Real proper noun → scrub, or whitelist by removing it from .cb-scrub-list."
+  echo "  • False positive → tighten the pattern (entropy required), or update this hook."
+  echo
+  echo "To bypass for this commit ONLY (not recommended):  git commit --no-verify"
+  exit 1
+fi
+
+echo "${GREEN}context-bridge pre-commit: clean (${#TEXT_FILES[@]} file(s) scanned).${RESET}"
+exit 0

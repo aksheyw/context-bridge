@@ -1,0 +1,132 @@
+name: pii-scrub-check
+
+on:
+  pull_request:
+    branches: [main]
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  scan:
+    name: secret + PII scan (repo-wide)
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          # Need full history so we can scan all tracked files (not just diffed ones)
+          fetch-depth: 1
+
+      - name: Secret scan (entropy-required patterns)
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Patterns from skill/references/secret-scan-guidance.md.
+          # Entropy required after each prefix — bare prefixes (which appear
+          # in documentation) must NOT trigger.
+          PATTERNS=(
+            'sk-or-v1-[A-Za-z0-9]{20,}'
+            'sk-[A-Za-z0-9]{30,}'
+            'ghp_[A-Za-z0-9]{30,}'
+            'gho_[A-Za-z0-9]{30,}'
+            'ghs_[A-Za-z0-9]{30,}'
+            'eyJ[A-Za-z0-9_=-]{10,}\.[A-Za-z0-9_=-]{10,}\.[A-Za-z0-9_=-]{20,}'
+            '[0-9]{8,12}:[A-Za-z0-9_-]{30,50}'
+            'AKIA[A-Z0-9]{16}'
+            'ASIA[A-Z0-9]{16}'
+            'BEGIN [A-Z]+ PRIVATE KEY'
+          )
+
+          HITS=0
+          for pat in "${PATTERNS[@]}"; do
+            # Use git grep so we only scan tracked content (not vendored deps if any are ever added)
+            if matches="$(git grep -nE "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!.githooks/pre-commit' ':!skill/references/secret-scan-guidance.md' ':!skill/commands/cb-ingest.md' ':!skill/commands/cb-save-sync.md' 2>/dev/null || true)"; then
+              if [ -n "$matches" ]; then
+                echo "::error::Secret pattern matched: $pat"
+                echo "$matches" | head -10
+                HITS=$((HITS + 1))
+              fi
+            fi
+          done
+
+          if [ "$HITS" -gt 0 ]; then
+            echo
+            echo "Secret-scan FAILED: $HITS pattern(s) matched."
+            echo "Files documenting the patterns themselves are excluded:"
+            echo "  - .github/workflows/pii-scrub-check.yml (this file)"
+            echo "  - .githooks/pre-commit"
+            echo "  - skill/references/secret-scan-guidance.md"
+            echo "  - skill/commands/cb-ingest.md"
+            echo "  - skill/commands/cb-save-sync.md"
+            echo
+            echo "If a real key matches, rotate it immediately, then redact + force-push."
+            echo "If documentation matches (e.g. you added a new doc page), add the path to the exclusion list."
+            exit 1
+          fi
+
+          echo "Secret scan clean (${#PATTERNS[@]} patterns, repo-wide)."
+
+      - name: PII / proper-noun scan
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          # Public-repo baseline: no real personal-project names from the author's
+          # workspace should appear in context-bridge OSS commits. This list is
+          # intentionally short — the local .githooks/pre-commit + .cb-scrub-list
+          # carry the full per-machine scrub list (which itself is gitignored).
+          PATTERNS=(
+            'Plant Sage'
+            'Kahaani'
+            'KahaaniBlog'
+            'Wealth Builder'
+            'sage-bot'
+            'sage-hermes'
+            'sagebotAI'
+            'kahaaniblog'
+            'kahaaniastudio'
+            'srv1134430'
+            'aksheyw@gmail'
+          )
+
+          HITS=0
+          for pat in "${PATTERNS[@]}"; do
+            if matches="$(git grep -nF "$pat" -- ':!.github/workflows/pii-scrub-check.yml' 2>/dev/null || true)"; then
+              if [ -n "$matches" ]; then
+                echo "::error::PII pattern matched: $pat"
+                echo "$matches" | head -10
+                HITS=$((HITS + 1))
+              fi
+            fi
+          done
+
+          if [ "$HITS" -gt 0 ]; then
+            echo
+            echo "PII-scan FAILED: $HITS proper-noun pattern(s) matched."
+            echo "Scrub before merging. The OSS repo must not reference private projects."
+            exit 1
+          fi
+
+          echo "PII scan clean (${#PATTERNS[@]} patterns, repo-wide)."
+
+      - name: Skill body line-count gate
+        shell: bash
+        run: |
+          set -euo pipefail
+          if [ ! -f skill/SKILL.md ]; then
+            echo "skill/SKILL.md missing — skipping line-count gate."
+            exit 0
+          fi
+          lines="$(wc -l < skill/SKILL.md | tr -d ' ')"
+          echo "skill/SKILL.md: $lines lines (budget: 200)"
+          if [ "$lines" -gt 200 ]; then
+            echo "::error::skill/SKILL.md exceeds the 200-line body budget. Move deep content into references/."
+            exit 1
+          fi
+          echo "Line-count gate OK."

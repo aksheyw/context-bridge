@@ -3,6 +3,10 @@
 # Author's proper-noun scrub list (gitignored per spec §9.1)
 PROPER_NOUN_SCRUB_LIST.md
 
+# Per-project proper-noun list consumed by .githooks/pre-commit
+# (Adopter convention documented in CONTRIBUTING.md + docs/getting-started.md)
+.cb-scrub-list
+
 # Local environment + secrets
 .env
 .env.*
