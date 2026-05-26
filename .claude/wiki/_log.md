@@ -9,6 +9,26 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 6 addendum — 2026-05-26 (Tue ~22:15 IST, ~10 min, post-ship repo hygiene)
+
+User triggered an audit after reviewing the public repo root in a browser. Three items closed; git history confirmed clean (no history trimming needed).
+
+1. **Deleted `NEXT_SESSION_PROMPT.md`** — Session-1 stale artifact. Referenced v0.1 not yet shipped + "target ship within ~7 days". Superseded by the SESSION_HANDOFF pattern. Git log preserves the content.
+2. **Adopted FAQ option C for SESSION_HANDOFF accumulation.** Added `SESSION_HANDOFF_*.md` to `.gitignore`. `git rm` the older 2 tracked handoffs (`-2026-05-26`, `-2026-05-26-2130`). `git rm --cached` the latest (`-2026-05-26-2200`) so it stays in the working tree as a local warm-resume artifact but no longer tracked. Per `docs/faq.md:152` this was always an adopter choice; the project now declares its own preference.
+3. **Removed `[0.0.0]` from CHANGELOG.md** — link to `releases/tag/v0.0.0` returned HTTP 404; the tag never existed on origin or locally. The [0.0.0] entry itself said "shell only — pre-skill, record-keeping only". Cleaner per Keep-a-Changelog convention.
+
+Git history audit:
+- Secrets in history: **clean** (entropy-required scan of all commits).
+- PII / private-project names in history: **clean** (10 patterns scanned across all commits).
+- Binary files in history: **none** (the extensionless `LICENSE` / `.githooks/pre-commit` / `.github/CODEOWNERS` are text).
+- Repo physical size: 1.3 MB `.git`, 1.9 MB total — tiny.
+
+No history trimming, force-push, or `git filter-repo` needed. Working tree + remote main are in good shape.
+
+Commit: `chore: repo hygiene — remove stale prompt, gitignore handoffs, drop v0.0.0 ref`. Direct-to-main (docs/config-only changes per workflow.md Step 3). CI on main expected to stay green.
+
+---
+
 ## Session 6 — 2026-05-26 (Tue ~22:00 IST, ~1.5h, v0.1.2 Tier 1 polish ship + F7/F8 surfaced + closed)
 
 **Phase:** Execute the Tier 1 v0.1.2 polish queued at Session 5 close. 7 industry-best-practice items + 2 CI parity findings that surfaced mid-flight.

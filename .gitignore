@@ -23,6 +23,11 @@ Thumbs.db
 # Personal-only wiki notes (per spec §9.3)
 .claude/wiki/*-private.md
 
+# Session handoff artifacts — local-only by design (FAQ option C, adopted Session 6 close)
+# The latest handoff is a warm-resume artifact for the next session on this machine; older
+# handoffs are git-log history and don't need to travel with the repo. See docs/faq.md §"SESSION_HANDOFF_*.md".
+SESSION_HANDOFF_*.md
+
 # Build artifacts (none in v0.1, but reserved)
 node_modules/
 dist/

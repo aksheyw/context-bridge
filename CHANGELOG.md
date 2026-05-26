@@ -142,22 +142,7 @@ First public release. Working skill bundle that can be installed, initialised in
 
 See [`docs/superpowers/specs/2026-05-26-context-bridge-design.md`](docs/superpowers/specs/2026-05-26-context-bridge-design.md) §11.2-11.3 for v0.2 + v0.3 scope.
 
----
-
-## [0.0.0] — 2026-05-26 (shell only — pre-skill)
-
-Repo bootstrap. No installable skill yet.
-
-### Added
-- Initial `README.md`, `LICENSE` (MIT), `CREDITS.md`, design spec.
-- Dev `.claude/wiki/` (dogfooded the convention before shipping it).
-- GitHub repo metadata (description, topics, secret-scanning, push-protection).
-
-### Notes
-- This release is for record-keeping. The first usable artifact is v0.1.0.
-
 [Unreleased]: https://github.com/aksheyw/context-bridge/compare/v0.1.2...HEAD
 [0.1.2]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.2
 [0.1.1]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.0
-[0.0.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.0.0

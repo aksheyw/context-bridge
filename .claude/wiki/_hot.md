@@ -87,6 +87,16 @@ Between now and Day-14:
 - F7: verify.sh added to CI's PII+secret scan exclusion lists (restores CI/local parity)
 - F8: PyYAML installed on macOS runners via setup-python + pip
 
+## Post-v0.1.2 repo-hygiene pass (2026-05-26, ~22:15 IST)
+
+Audit triggered by a screenshot review of the public repo root. Three real items closed in one hygiene commit (no new tag):
+
+- **Deleted** `NEXT_SESSION_PROMPT.md` — stale Session-1 artifact referring to v0.1 "target ship within ~7 days".
+- **Adopted FAQ option C** (`docs/faq.md:152`) for SESSION_HANDOFF accumulation: added `SESSION_HANDOFF_*.md` to `.gitignore`; removed the 2 older tracked handoffs; untracked the latest one (it stays locally as a warm-resume artifact, doesn't travel with the repo). Project decision: any future session's handoff is local-only by default.
+- **Removed `[0.0.0]` CHANGELOG entry + link** — link returned HTTP 404 (tag never existed). Cleanest fix per Keep-a-Changelog. v0.1.0 is now the first documented release.
+
+Git history is **clean** (verified): no secrets, no PII / private-project leaks, no binaries. `.git` total 1.3 MB. **No history trimming needed.**
+
 ## What's pending
 
 ### v0.2 / post-day-30-retro — Tier 2 (bats tests, CodeQL, Dependabot, architecture diagram, social preview, issue labels, AGENTS.md)
