@@ -251,3 +251,23 @@ jobs:
             exit 1
           fi
           echo "Hook + workflow syntax gate OK."
+
+      - name: Shellcheck on pre-commit hook (gate 8)
+        shell: bash
+        # bash -n only catches syntax errors. shellcheck catches semantic bugs
+        # (unquoted vars, broken array expansions, fragile pipes) of the same
+        # class as the grep -c bug we hit in scripts/verify.sh during v0.1.1.
+        # Pre-installed on both ubuntu-latest and macos-latest runners.
+        run: |
+          set -euo pipefail
+          if [ ! -f .githooks/pre-commit ]; then
+            echo ".githooks/pre-commit not found — skipping shellcheck."
+            exit 0
+          fi
+          if ! command -v shellcheck >/dev/null 2>&1; then
+            echo "::error::shellcheck not available on $(uname -s) runner"
+            exit 1
+          fi
+          shellcheck --version | head -3
+          shellcheck .githooks/pre-commit
+          echo "Shellcheck gate OK."
