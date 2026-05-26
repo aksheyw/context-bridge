@@ -45,8 +45,9 @@ jobs:
 
           HITS=0
           for pat in "${PATTERNS[@]}"; do
-            # Use git grep so we only scan tracked content (not vendored deps if any are ever added)
-            if matches="$(git grep -nE "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!.githooks/pre-commit' ':!skill/references/secret-scan-guidance.md' ':!skill/commands/cb-ingest.md' ':!skill/commands/cb-save-sync.md' 2>/dev/null || true)"; then
+            # Use git grep so we only scan tracked content (not vendored deps if any are ever added).
+            # Exclusion list MUST match scripts/verify.sh's gate_1_secrets() exclusions.
+            if matches="$(git grep -nE "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!.githooks/pre-commit' ':!skill/references/secret-scan-guidance.md' ':!skill/commands/cb-ingest.md' ':!skill/commands/cb-save-sync.md' ':!scripts/verify.sh' 2>/dev/null || true)"; then
               if [ -n "$matches" ]; then
                 echo "::error::Secret pattern matched: $pat"
                 echo "$matches" | head -10
@@ -64,6 +65,7 @@ jobs:
             echo "  - skill/references/secret-scan-guidance.md"
             echo "  - skill/commands/cb-ingest.md"
             echo "  - skill/commands/cb-save-sync.md"
+            echo "  - scripts/verify.sh"
             echo
             echo "If a real key matches, rotate it immediately, then redact + force-push."
             echo "If documentation matches (e.g. you added a new doc page), add the path to the exclusion list."
@@ -97,7 +99,9 @@ jobs:
 
           HITS=0
           for pat in "${PATTERNS[@]}"; do
-            if matches="$(git grep -nF "$pat" -- ':!.github/workflows/pii-scrub-check.yml' 2>/dev/null || true)"; then
+            # Exclusion list MUST match scripts/verify.sh's gate_2_pii() exclusions —
+            # both files document the pattern list literally for transparency.
+            if matches="$(git grep -nF "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!scripts/verify.sh' 2>/dev/null || true)"; then
               if [ -n "$matches" ]; then
                 echo "::error::PII pattern matched: $pat"
                 echo "$matches" | head -10
@@ -109,6 +113,10 @@ jobs:
           if [ "$HITS" -gt 0 ]; then
             echo
             echo "PII-scan FAILED: $HITS proper-noun pattern(s) matched."
+            echo "Files documenting the patterns themselves are excluded:"
+            echo "  - .github/workflows/pii-scrub-check.yml (this file)"
+            echo "  - scripts/verify.sh"
+            echo
             echo "Scrub before merging. The OSS repo must not reference private projects."
             exit 1
           fi
