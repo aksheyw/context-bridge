@@ -8,6 +8,42 @@ All notable changes to context-bridge are documented here. The format follows [K
 
 ---
 
+## [0.1.2] — 2026-05-26
+
+Polish pass on v0.1.1. No skill behavior changes. Adds OSS hygiene infrastructure + closes two CI parity findings (F7, F8) that surfaced during the polish.
+
+### Added
+
+- **`.github/CODEOWNERS`** — documents review responsibility (`* @aksheyw`). (T1-7)
+- **`.github/FUNDING.yml`** — enables the GitHub Sponsor button on the repo. Upstream sponsor links for Jesse Vincent etc. stay in `CREDITS.md` where they belong. (T1-6)
+- **GitHub Discussions enabled** on the repo — better forum for "how do I" than issues; keeps the issue tracker for actionable bugs. (T1-4)
+- **Branch protection on `main`** — requires both `secret + PII scan (repo-wide) (ubuntu-latest)` and `(macos-latest)` to pass before any PR can merge. Admins (solo maintainer) remain exempt for now via `enforce_admins: false`. (T1-5)
+- **CI matrix: `macos-latest`** — proves the pre-commit hook's macOS bash 3.2 portability claim that previously shipped unverified. (T1-2)
+- **CI gate 8: `shellcheck .githooks/pre-commit`** — catches semantic bash bugs (unquoted variables, broken array expansions, fragile pipes) that `bash -n` misses. Installed via `brew` on macOS; pre-installed on ubuntu. (T1-1)
+- **GitHub Releases** for v0.1.0 and v0.1.1 — both tags existed since the original ship but the Releases page was empty.
+
+### Fixed
+
+- **F7: CI PII-scan drift** — `scripts/verify.sh` was not in the CI workflow's PII-scan exclusion list, so CI had been red on every push to `main` since v0.1.1 (commits `442359d`, `5e9aa88`). The local `verify.sh` excludes itself from its own scans, masking the drift locally. CI exclusions now match `verify.sh`'s self-exclusions exactly, restoring the CI/local parity the v0.1.1 polish claimed.
+- **F8: PyYAML missing on macOS runners** — Gate 7 (workflow YAML syntax) failed on `macos-latest` with `ModuleNotFoundError: No module named 'yaml'`. Now installs PyYAML via `actions/setup-python@v5` + `pip install pyyaml` before any gate runs. Surfaced by T1-2 (matrix); this is exactly what the matrix was added to catch.
+
+### Unchanged
+
+- Skill body (`skill/SKILL.md` still 169 / 200 lines).
+- All 5 slash commands — no behavior changes.
+- All 7 templates and 8 references — no changes.
+- Pre-commit hook (`.githooks/pre-commit`) — no changes; shellcheck-clean.
+- ExampleApp — no changes.
+- `scripts/verify.sh` — no changes; local-only ergonomic gates (shellcheck remains CI-only because most macOS developers don't have it installed).
+- Success criteria dates — Day-14 retro (2026-06-09) and Day-30 retro (2026-06-25) unchanged from v0.1.1.
+
+### Known follow-ups (deferred — see [`docs/success-criteria.md`](docs/success-criteria.md) decision points)
+
+- **Node 20 deprecation notice** on `actions/checkout@v4` and `actions/setup-python@v5` — non-blocking warning. Will lift action versions before Sept 16, 2026 when Node 20 is removed from runners.
+- **Tier 2 / 3 items** — phased per [`.claude/wiki/v0.1.2-plan.md`](.claude/wiki/v0.1.2-plan.md). Day-30 retro at 2026-06-25 decides which graduate to v0.2.
+
+---
+
 ## [0.1.1] — 2026-05-26
 
 Same-day polish pass on v0.1.0. No behavior changes to any slash command; no API or schema changes; no template changes. v0.1.1 fixes adopter-experience and contributor-experience gaps surfaced by a second-pass review of the v0.1.0 surfaces.
@@ -120,7 +156,8 @@ Repo bootstrap. No installable skill yet.
 ### Notes
 - This release is for record-keeping. The first usable artifact is v0.1.0.
 
-[Unreleased]: https://github.com/aksheyw/context-bridge/compare/v0.1.1...HEAD
+[Unreleased]: https://github.com/aksheyw/context-bridge/compare/v0.1.2...HEAD
+[0.1.2]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.2
 [0.1.1]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.1
 [0.1.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.1.0
 [0.0.0]: https://github.com/aksheyw/context-bridge/releases/tag/v0.0.0

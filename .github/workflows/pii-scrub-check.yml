@@ -13,14 +13,30 @@ permissions:
 jobs:
   scan:
     name: secret + PII scan (repo-wide)
-    runs-on: ubuntu-latest
+    runs-on: ${{ matrix.os }}
     timeout-minutes: 5
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [ubuntu-latest, macos-latest]
     steps:
       - name: Checkout
         uses: actions/checkout@v4
         with:
           # Need full history so we can scan all tracked files (not just diffed ones)
           fetch-depth: 1
+
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Ensure PyYAML
+        shell: bash
+        # PyYAML is pre-installed on ubuntu-latest runners but not on macos-latest.
+        # Gate 7 (workflow syntax) and Gate 5 (cross-link checker) both need python3;
+        # only Gate 7 imports yaml. Idempotent install keeps both matrix legs identical.
+        run: python3 -m pip install --quiet pyyaml
 
       - name: Secret scan (entropy-required patterns)
         shell: bash
@@ -45,8 +61,9 @@ jobs:
 
           HITS=0
           for pat in "${PATTERNS[@]}"; do
-            # Use git grep so we only scan tracked content (not vendored deps if any are ever added)
-            if matches="$(git grep -nE "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!.githooks/pre-commit' ':!skill/references/secret-scan-guidance.md' ':!skill/commands/cb-ingest.md' ':!skill/commands/cb-save-sync.md' 2>/dev/null || true)"; then
+            # Use git grep so we only scan tracked content (not vendored deps if any are ever added).
+            # Exclusion list MUST match scripts/verify.sh's gate_1_secrets() exclusions.
+            if matches="$(git grep -nE "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!.githooks/pre-commit' ':!skill/references/secret-scan-guidance.md' ':!skill/commands/cb-ingest.md' ':!skill/commands/cb-save-sync.md' ':!scripts/verify.sh' 2>/dev/null || true)"; then
               if [ -n "$matches" ]; then
                 echo "::error::Secret pattern matched: $pat"
                 echo "$matches" | head -10
@@ -64,6 +81,7 @@ jobs:
             echo "  - skill/references/secret-scan-guidance.md"
             echo "  - skill/commands/cb-ingest.md"
             echo "  - skill/commands/cb-save-sync.md"
+            echo "  - scripts/verify.sh"
             echo
             echo "If a real key matches, rotate it immediately, then redact + force-push."
             echo "If documentation matches (e.g. you added a new doc page), add the path to the exclusion list."
@@ -97,7 +115,9 @@ jobs:
 
           HITS=0
           for pat in "${PATTERNS[@]}"; do
-            if matches="$(git grep -nF "$pat" -- ':!.github/workflows/pii-scrub-check.yml' 2>/dev/null || true)"; then
+            # Exclusion list MUST match scripts/verify.sh's gate_2_pii() exclusions —
+            # both files document the pattern list literally for transparency.
+            if matches="$(git grep -nF "$pat" -- ':!.github/workflows/pii-scrub-check.yml' ':!scripts/verify.sh' 2>/dev/null || true)"; then
               if [ -n "$matches" ]; then
                 echo "::error::PII pattern matched: $pat"
                 echo "$matches" | head -10
@@ -109,6 +129,10 @@ jobs:
           if [ "$HITS" -gt 0 ]; then
             echo
             echo "PII-scan FAILED: $HITS proper-noun pattern(s) matched."
+            echo "Files documenting the patterns themselves are excluded:"
+            echo "  - .github/workflows/pii-scrub-check.yml (this file)"
+            echo "  - scripts/verify.sh"
+            echo
             echo "Scrub before merging. The OSS repo must not reference private projects."
             exit 1
           fi
@@ -227,3 +251,32 @@ jobs:
             exit 1
           fi
           echo "Hook + workflow syntax gate OK."
+
+      - name: Install shellcheck (macOS only — ubuntu has it pre-installed)
+        if: runner.os == 'macOS'
+        shell: bash
+        run: |
+          if command -v shellcheck >/dev/null 2>&1; then
+            echo "shellcheck already installed; skipping brew."
+          else
+            brew install shellcheck
+          fi
+
+      - name: Shellcheck on pre-commit hook (gate 8)
+        shell: bash
+        # bash -n only catches syntax errors. shellcheck catches semantic bugs
+        # (unquoted vars, broken array expansions, fragile pipes) of the same
+        # class as the grep -c bug we hit in scripts/verify.sh during v0.1.1.
+        run: |
+          set -euo pipefail
+          if [ ! -f .githooks/pre-commit ]; then
+            echo ".githooks/pre-commit not found — skipping shellcheck."
+            exit 0
+          fi
+          if ! command -v shellcheck >/dev/null 2>&1; then
+            echo "::error::shellcheck not available on $(uname -s) runner"
+            exit 1
+          fi
+          shellcheck --version | head -3
+          shellcheck .githooks/pre-commit
+          echo "Shellcheck gate OK."
