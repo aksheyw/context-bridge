@@ -9,6 +9,109 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 6 addendum 2 — 2026-05-26 (Tue ~22:30-22:50 IST, ~30 min, launch-readiness + template fix + share-decision capture + comprehensive close)
+
+User question: *"so its ready to ship and share now"*. Distinguished SHIP (done at v0.1.2) from SHARE (act of telling people — not done yet) and ran a launch-readiness audit. Followed by user's request for comprehensive save+sync.
+
+### What was done — in order
+
+1. **Repo-metadata audit** via `gh repo view aksheyw/context-bridge --json description,homepageUrl,repositoryTopics,visibility,openGraphImageUrl,usesCustomOpenGraphImage`:
+   - description ✅ — "Resume your Claude Code sessions warm..."
+   - 6 topics ✅ — ai-tooling, claude-code, context-engineering, developer-tools, llm-wiki, skills
+   - `usesCustomOpenGraphImage: false` — uses default GitHub auto-card; LinkedIn link previews would be generic. Flagged as elevated T2-5.
+   - homepageUrl empty (acceptable; can point to launch post once written)
+   - visibility PUBLIC ✓; branch protection active; Discussions enabled
+
+2. **Stale-reference scan** for the just-deleted files (`NEXT_SESSION_PROMPT.md`, `SESSION_HANDOFF_2026-05-26.md`, `SESSION_HANDOFF_2026-05-26-2130.md`):
+   - Both wiki `_hot.md` and `_log.md` reference the deleted filenames — but these are AUDIT RECORD context (correct, intentional).
+   - `skill/references/handoff-template.md:108` had `SESSION_HANDOFF_2026-05-26.md` as a worked-example literal that COLLIDED with the deleted file name. Adopters reading the template would look for a non-existent file.
+
+3. **Stale-date alignment fix** (commit `a2a7ce5`): realigned `handoff-template.md` worked example from `2026-05-26` to `2026-05-25`, mirroring the actual worked-example file `examples/ExampleApp/SESSION_HANDOFF_2026-05-25.md` shipped in the repo. Added section-title parenthetical clarifying the example mirrors the ExampleApp's real artifact. 8/8 gates green; pushed direct-to-main (docs-only); matrix CI green on `a2a7ce5`.
+
+4. **README install-line verification**: re-read README install/verify sections (lines 61-66, 86, 143-164). `npx skills add aksheyw/context-bridge` is the primary path; manual-clone fallback in `docs/install-verification.md`; troubleshooting covers `/cb-init` not-found + templates-not-found common cases. All install surfaces present and consistent.
+
+5. **Share-mode decision captured**: 4-option AskUserQuestion. Akshey selected **Path A — Active launch** (recommended): next session opens with "write the LinkedIn/X launch post + add the custom 1280×640 OG image (T2-5)" as the first task. ~45-60 min of work. Bridges the "shipped but not shared" gap.
+
+6. **Issues + improvements found this session, tracked to respective phases** (added to `v0.1.2-plan.md`):
+   - T1.5-1: Write LinkedIn/X launch post + thread (NEW for v0.1.2 polish closeout; pre-Day-14 retro)
+   - T1.5-2: Custom OG / social-preview image (was T2-5; elevated to T1.5 since it gates a sharp launch)
+   - T1.5-3: First-friend install test (zero-cost insurance; soft launch via DM before public post — Akshey may skip per Path A choice but worth offering)
+   - T2-8 (NEW): Make `scripts/verify.sh` skips loud on missing deps — root-cause prevention for F7 + F8 patterns (silent skip masks parity drift). Should fail with `::warning` or `::error` instead of `2>/dev/null` silence when shellcheck / PyYAML / python3 are missing. Estimated 1-2 hr.
+   - T2-9 (NEW): Lift action versions to support Node 24 — `actions/checkout@v4` and `actions/setup-python@v5` flagged as deprecated; Node 20 removed from runners 2026-09-16. Pin to versions that support Node 24 before September. Estimated 30 min when newer majors are stable.
+
+7. **Comprehensive save+sync** (THIS step, in progress): wiki + memory + handoff + verify + commit + push.
+
+### Decisions
+
+- **SHIP vs SHARE distinction codified** as a launch-readiness framework, not just a v0.1.2 detail. SHIP = code is on main + tagged + released. SHARE = audience is told. Both gates matter; conflating them risks treating "merged to main" as launch.
+- **Path A queued for next session.** First task on resume = launch post + OG image. Pure watch mode (Path B) deferred unless adoption signal arrives organically before then.
+- **`handoff-template.md` date realignment** — match worked example to ExampleApp's actual file (`2026-05-25`) rather than use placeholder syntax, because vivid concrete examples teach better than `<YYYY-MM-DD>` placeholders. Added section title clarification to remove ambiguity.
+- **No tag bump for the post-ship hygiene work** — these were micro-corrections to v0.1.2 surface (template wording, repo cleanup), not new features. Keep v0.1.2 as the ship line. Next tag is v0.1.3 only if a real adopter-visible change ships before Day-30 retro.
+
+### Findings opened this session
+
+**Zero new findings.** No defects in the shipped product surfaced this session.
+
+The 5 items added to `v0.1.2-plan.md` (T1.5-1/2/3 + T2-8/T2-9) are **improvements**, NOT findings (per the F7-F8 distinction recorded in `_findings.md`). Tracked in plan, not in findings register.
+
+### Notable user pushes that improved the result
+
+- *"audit the entire github"* + screenshot → triggered the post-ship visual audit that found 3 stale-file items (NEXT_SESSION_PROMPT + 2 older handoffs + broken v0.0.0 link). Without this prompt the stale artifacts would have stayed visible to first-time visitors.
+- *"do we need to trim/remove git history?"* → forced an explicit git-history clean-check. Confirmed history is clean; documented for future reference so the question doesn't need re-asking next session.
+- *"so its ready to ship and share now"* → forced the SHIP vs SHARE distinction. Surface-level "yes" would have led to a sub-optimal launch with default OG image + no launch narrative.
+- *"save and sync including learnings ... dont miss anything!"* → forced explicit prioritization + phase-assignment of every surfaced item. Without this, the loud-skips lesson and Node 24 deprecation might have stayed as ambient knowledge instead of tracked Tier 2 candidates.
+
+### What we LEARNED
+
+- **Visual audit of the public artifact catches what local gates miss.** `scripts/verify.sh` is 8/8 green BUT cannot see: stale repo-root files, default OG image, broken changelog links, accumulating untracked-policy gaps. A human-eye scan of the public repo URL in a browser surfaces these in 60 seconds. Captured as durable memory: [[lesson-post-ship-visual-audit]].
+- **SHIP and SHARE are distinct gates.** The build → ship transition is verifiable via gates + CI. The ship → share transition requires narrative work (launch post), visual work (OG image), and external-trust work (friend install test). Treating these as the same step is how good projects launch quietly.
+- **Vivid examples teach better than placeholder syntax — until they collide with reality.** `handoff-template.md` used a literal `2026-05-26` date inside a worked example. That date happened to match a real (now-deleted) file in the repo, causing adopter confusion. Lesson: when worked examples use specific dates/names, pick ones that mirror the actual ExampleApp artifacts (`2026-05-25` aligns with `examples/ExampleApp/SESSION_HANDOFF_2026-05-25.md`) — not generic placeholders OR colliding real values.
+- **Issues found late-session must be tracked to phase, not left as ambient knowledge.** The loud-skips improvement and Node 24 deprecation surfaced casually but matter. Without explicit T2-8 / T2-9 entries in `v0.1.2-plan.md`, they'd be lost between this session-close and Day-14 retro.
+
+### Files changed this session (cumulative across Session 6 main + addendum + addendum 2)
+
+| Path | Change | Phase |
+|---|---|---|
+| `.github/CODEOWNERS` | NEW | v0.1.2 |
+| `.github/FUNDING.yml` | NEW | v0.1.2 |
+| `.github/workflows/pii-scrub-check.yml` | extended (matrix + setup-python + shellcheck + F7 exclusion + brew install) | v0.1.2 |
+| `CHANGELOG.md` | v0.1.2 entry added; [0.0.0] entry removed (hygiene); compare-links updated | v0.1.2 + hygiene |
+| `.gitignore` | added `SESSION_HANDOFF_*.md` pattern + comment | hygiene |
+| `NEXT_SESSION_PROMPT.md` | DELETED (stale) | hygiene |
+| `SESSION_HANDOFF_2026-05-26.md` | DELETED (older) | hygiene |
+| `SESSION_HANDOFF_2026-05-26-2130.md` | DELETED (older) | hygiene |
+| `SESSION_HANDOFF_2026-05-26-2200.md` | created then untracked; now local-only | session-end then hygiene |
+| `skill/references/handoff-template.md` | date realigned `2026-05-26` → `2026-05-25` + section title clarification | launch-readiness |
+| `.claude/wiki/_hot.md` | Session 6 close + hygiene block + launch-readiness block | wiki |
+| `.claude/wiki/_log.md` | Session 6 entry + addendum + addendum 2 (this) | wiki |
+| `.claude/wiki/_findings.md` | F7 + F8 entries + closed | wiki |
+| `.claude/wiki/v0.1.2-plan.md` | Tier 1 SHIPPED + Session 6 closeout + 5 new items added | wiki |
+| `~/.claude/projects/.../memory/project-context-bridge.md` | v0.1.2 row + Path A queued | memory |
+| `~/.claude/projects/.../memory/lesson-ci-parity-verify-state-not-claim.md` | NEW | memory |
+| `~/.claude/projects/.../memory/lesson-post-ship-visual-audit.md` | NEW (this addendum) | memory |
+| `~/.claude/projects/.../memory/MEMORY.md` | indexes updated | memory |
+| `SESSION_HANDOFF_2026-05-26-2251.md` | NEW (local-only per FAQ option C) | this close |
+
+Twelve commits on `main`, three annotated tags pushed (v0.1.0, v0.1.1, v0.1.2). Final commit before this close = `a2a7ce5`.
+
+### Nothing destructive — confirmation matrix
+
+| Operation | Reversible? | Destruction risk | Verdict |
+|---|---|---|---|
+| `git merge --no-ff feature/v0.1.2-polish` | Yes (revert commit) | None — preserves all build commits | ✅ Safe |
+| Branch protection activated with `enforce_admins: false` | Yes (gh api delete protection) | None — admin still can push | ✅ Safe |
+| `gh release create v0.1.0/v0.1.1/v0.1.2` | Yes (gh release delete) | None — tags pre-existed; releases just publish notes | ✅ Safe |
+| `git rm NEXT_SESSION_PROMPT.md` + 2 handoffs | Yes (git revert / git checkout commit~ -- <file>) | None — git log preserves content | ✅ Safe |
+| `git rm --cached SESSION_HANDOFF_*.md` + .gitignore | Yes (un-ignore + re-add) | None — file kept in working tree | ✅ Safe |
+| CHANGELOG.md [0.0.0] removal | Yes (git revert) | None — entry was for a non-existent release | ✅ Safe |
+| `handoff-template.md` date realignment | Yes (git revert) | None — content improvement only | ✅ Safe |
+| Direct push to `main` (admin bypass) | N/A — pushes succeeded, CI green | None — used only for docs/hygiene per workflow.md; never for code releases | ✅ Safe |
+| Memory file edits | N/A — additive | None — additive only | ✅ Safe |
+
+**No force pushes. No tag movement or deletion. No `git filter-repo`. No history rewriting. No `--no-verify` on commits. No file overwrites of in-progress work. Every operation either improved repo state or was content-preserving.**
+
+---
+
 ## Session 6 addendum — 2026-05-26 (Tue ~22:15 IST, ~10 min, post-ship repo hygiene)
 
 User triggered an audit after reviewing the public repo root in a browser. Three items closed; git history confirmed clean (no history trimming needed).

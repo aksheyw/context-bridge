@@ -97,6 +97,21 @@ Audit triggered by a screenshot review of the public repo root. Three real items
 
 Git history is **clean** (verified): no secrets, no PII / private-project leaks, no binaries. `.git` total 1.3 MB. **No history trimming needed.**
 
+## Launch-readiness pass (2026-05-26, ~22:30-22:50 IST)
+
+Triggered by Akshey's "ready to ship and share now?" question. Distinguished SHIP (done) from SHARE (act of telling people) and tightened the share surface:
+
+- **Repo metadata audit:** description ✅, 6 topics ✅, README install path verified, install fallback documented in `docs/install-verification.md`, GitHub Releases populated, branch protection active. Default OG image (auto-generated GitHub card) flagged for elevation.
+- **Stale-date alignment**: `skill/references/handoff-template.md:108` worked-example used literal date `2026-05-26` that collided with the just-deleted repo-root handoff. Realigned to `2026-05-25` to mirror `examples/ExampleApp/SESSION_HANDOFF_2026-05-25.md` — the actual worked-example handoff shipped in the repo. Commit `a2a7ce5`.
+- **Share-mode decision**: Akshey selected **Path A — Active launch** (ship + share now, fix gaps from signal). Path A queued for next session: write LinkedIn/X launch post + add custom OG image (T2-5). Day-14 retro at 2026-06-09 remains the first signal checkpoint regardless.
+- **Issues surfaced + scheduled for respective phases**: see [`v0.1.2-plan.md`](v0.1.2-plan.md) §"Issues + improvements identified this session (Session 6)" — five items added to Tier 1.5 (launch) and Tier 2.
+
+## Current posture for next session (Path A — active launch)
+
+**First task at next session**: write the LinkedIn/X launch post + add custom 1280×640 OG image (T2-5). Estimated 45-60 min total. Closes the "shipped but not shared" gap.
+
+Day-14 retro at **2026-06-09 (Tue)** and Day-30 retro at **2026-06-25 (Thu)** remain the formal evaluation points regardless of when launch post drops.
+
 ## What's pending
 
 ### v0.2 / post-day-30-retro — Tier 2 (bats tests, CodeQL, Dependabot, architecture diagram, social preview, issue labels, AGENTS.md)
