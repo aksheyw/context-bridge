@@ -26,6 +26,18 @@ jobs:
           # Need full history so we can scan all tracked files (not just diffed ones)
           fetch-depth: 1
 
+      - name: Setup Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Ensure PyYAML
+        shell: bash
+        # PyYAML is pre-installed on ubuntu-latest runners but not on macos-latest.
+        # Gate 7 (workflow syntax) and Gate 5 (cross-link checker) both need python3;
+        # only Gate 7 imports yaml. Idempotent install keeps both matrix legs identical.
+        run: python3 -m pip install --quiet pyyaml
+
       - name: Secret scan (entropy-required patterns)
         shell: bash
         run: |
