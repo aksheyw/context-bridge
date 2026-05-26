@@ -1,0 +1,6 @@
+# Code Owners — context-bridge
+# https://docs.github.com/en/repositories/managing-your-repositories-settings-and-security/customizing-your-repository/about-code-owners
+#
+# Matches the most-specific pattern win. Solo maintainer for v0.1.x.
+
+* @aksheyw
