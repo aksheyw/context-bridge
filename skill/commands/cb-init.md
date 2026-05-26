@@ -23,7 +23,7 @@ Check and report ALL of the following before changing anything:
 1. **Slash command collisions.** List files in `~/.claude/commands/` and `<project>/.claude/commands/` matching `cb-*.md`. If any exist that are NOT from context-bridge (no `context-bridge` line in frontmatter or body), warn the user and ask whether to continue.
 2. **Existing `.claude/wiki/`.** If present, determine its shape:
    - If it contains `_hot.md` AND `_findings.md` AND a `context-bridge` marker line — treat as already initialised; jump to Step 5 (idempotent re-run).
-   - If it contains Karpathy-style files (`_log.md` + `_schema.md`) but no `_hot.md` — offer migration (Step 3, branch B).
+   - If it contains [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)-style files (`_log.md` + `_schema.md`) but no `_hot.md` — offer migration (Step 3, branch B).
    - Anything else — offer migration (Step 3, branch B).
 3. **Existing `CLAUDE.md`.** Note whether it exists. If yes, search it for the marker `<!-- context-bridge:begin -->`. If marker found — already initialised in CLAUDE.md (Step 4 will skip append).
 4. **Git status.** Run `git status --porcelain`. If there are uncommitted changes, mention them. Do NOT abort — adopters may legitimately be mid-work — but flag for awareness.
@@ -66,7 +66,7 @@ Greenfield path:
 Migration branch B (existing wiki):
 
 - Always preserve existing files. Only add what's missing.
-- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. Karpathy LLMwiki) and the context-bridge additions.
+- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) and the context-bridge additions.
 - If user chose **adopt as-is**: write `_schema.md` only (and only if absent). No other files.
 - If user chose **refuse**: stop here. Print "Aborted — no files changed."
 
