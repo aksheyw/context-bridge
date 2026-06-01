@@ -1,16 +1,16 @@
 ---
 title: Hot — Current Focus
-updated: 2026-05-26
-session: 6
+updated: 2026-06-01
+session: 7
 ---
 
 # 🔥 Hot — context-bridge
 
-**Session 6 closed 2026-05-26 (Tue ~22:00 IST, ~1.5h, v0.1.2 Tier 1 polish shipped + F7 + F8 surfaced and fixed).**
+**Session 7 closed 2026-06-01 — wiki-lint shipped as gate 8 (the deferred v0.2 lint).** PR [#1](https://github.com/aksheyw/context-bridge/pull/1) squash-merged to `main` `0ec07e0`; CI green ubuntu+macOS. (Session 6 2026-05-26: v0.1.2 Tier 1 polish + F7/F8.)
 
 ## Current phase
 
-**v0.1.2 shipped to main + tagged.** Three releases live on origin:
+**Gate 8 (wiki-lint) shipped on top of v0.1.2.** `scripts/wiki-lint.py` (the v0.2 lint specced in `wiki-structure.md`) now runs locally + in CI against the ExampleApp fixture; shellcheck renumbered → gate 9. CHANGELOG entry is in `[Unreleased]` — **no tag cut** (v0.2 graduation is the Day-30 retro call). v0.1.2 remains the latest tagged release:
 - [v0.1.0](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.0)
 - [v0.1.1](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.1)
 - [v0.1.2](https://github.com/aksheyw/context-bridge/releases/tag/v0.1.2) (latest)
@@ -37,7 +37,7 @@ Total: 8 commits on `feature/v0.1.2-polish` + 1 merge commit on `main`.
 
 ## Top tasks for next session
 
-**No automatic tasks.** Day-14 retro at 2026-06-09 is the next scheduled check; Day-30 retro at 2026-06-25 is the formal v0.1 evaluation.
+**No automatic tasks.** Day-14 retro at 2026-06-09 is the next scheduled check; Day-30 retro at 2026-06-25 is the formal v0.1 evaluation — and the point to decide whether the `[Unreleased]` gate-8/wiki-lint work graduates into a tagged v0.2 (vs. holding).
 
 Between now and Day-14:
 - Watch for adoption signal (stars / clones / issues / DMs per [`docs/success-criteria.md`](../../docs/success-criteria.md)).

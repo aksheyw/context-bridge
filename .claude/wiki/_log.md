@@ -9,6 +9,28 @@ Append-only. One entry per session. Reverse chronological.
 
 ---
 
+## Session 7 — 2026-06-01 — wiki-lint shipped as gate 8 (the deferred v0.2 lint)
+
+Origin: an external review of [phuryn/pm-brain](https://github.com/phuryn/pm-brain) surfaced that context-bridge's own deferred v0.2 lint (specced in `skill/references/wiki-structure.md`) was unbuilt. Built + shipped it.
+
+### What was done — in order
+
+1. **`scripts/wiki-lint.py`** (new) — the v0.2 lint: required frontmatter (`title:` + ISO `updated:`), broken `[[wiki-links]]`, non-monotonic/duplicate finding IDs are **errors**; stale root-file dates + orphan pages are **warnings**. Stdlib-only python3, flag-only (reports, never edits). `--no-stale` for frozen fixtures. Tested clean on the ExampleApp fixture + a deliberately-broken wiki (caught every error class).
+2. **Wired as gate 8** in `scripts/verify.sh` + CI (`.github/workflows/pii-scrub-check.yml`) — runs against the ExampleApp fixture with `--no-stale` (a frozen fixture's dates age past 30d by design).
+3. **Numbering:** wiki-lint = gate 8 (shared local+CI); shellcheck renumbered → **gate 9** (CI-only extra), preserving the existing convention. "7 gates" → "8" in `CONTRIBUTING.md` + `README.md`. Fixed the stale `verify.sh` header ("gates 4-7 local-only" — CI has enforced 4-7 since v0.1.1). Verified the CI job `name:` + matrix labels were unchanged, so branch protection still gates (the gated merge succeeded).
+4. **Shipped** via PR [#1](https://github.com/aksheyw/context-bridge/pull/1) squash-merged to `main` `0ec07e0`. Local `verify.sh` **9/9** green; CI green `ubuntu-latest` + `macos-latest`.
+
+### Findings
+None open. The two issues touched (stale `verify.sh` header; `verify.sh`-vs-CI gate-numbering drift) were both **fixed** this session.
+
+### Notes
+- CHANGELOG entry is in `[Unreleased]` — **no version tag cut**. v0.2 graduation/tag is the Day-30 retro (2026-06-25) decision.
+- This graduated a v0.2 item ahead of the retro — a deliberate maintainer call (the recommendation had been to hold for the retro).
+
+**Next:** see `_hot.md`. Day-14 retro 2026-06-09; Day-30 retro 2026-06-25.
+
+---
+
 ## Session 6 addendum 2 — 2026-05-26 (Tue ~22:30-22:50 IST, ~30 min, launch-readiness + template fix + share-decision capture + comprehensive close)
 
 User question: *"so its ready to ship and share now"*. Distinguished SHIP (done at v0.1.2) from SHARE (act of telling people — not done yet) and ran a launch-readiness audit. Followed by user's request for comprehensive save+sync.
