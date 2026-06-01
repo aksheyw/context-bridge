@@ -2,10 +2,10 @@
 #
 # context-bridge — local gate runner
 # ----------------------------------------------------------------------
-# Runs all 7 contributor gates from CONTRIBUTING.md in one go.
-# Exit code: 0 if all gates green, 1 if any fail. Designed to mirror
-# what CI enforces (gates 1-3 today; gates 4-7 are local-only until
-# extended to CI).
+# Runs all 8 contributor gates from CONTRIBUTING.md in one go.
+# Exit code: 0 if all gates green, 1 if any fail. Mirrors what CI
+# enforces (gates 1-8). CI additionally runs shellcheck (gate 9),
+# which is CI-only because most macOS dev machines lack it.
 #
 # Usage:
 #   scripts/verify.sh          # all gates
@@ -243,8 +243,32 @@ gate_7_hook_yaml_syntax() {
 }
 
 # ----------------------------------------------------------------------
+# Gate 8 — Wiki lint (the example fixture stays schema-valid)
+# ----------------------------------------------------------------------
+gate_8_wiki_lint() {
+  heading "Gate 8 — Wiki lint (ExampleApp fixture)"
+  if ! command -v python3 >/dev/null 2>&1; then
+    fail "Gate 8: python3 not available"
+    return
+  fi
+  local wiki="examples/ExampleApp/.claude/wiki"
+  if [ ! -d "$wiki" ]; then
+    pass "no example wiki to lint (skipped)"
+    return
+  fi
+  local out
+  # --no-stale: the fixture is frozen, so its dates legitimately age past 30 days.
+  if out="$(python3 scripts/wiki-lint.py "$wiki" --no-stale 2>&1)"; then
+    pass "$wiki lints clean"
+  else
+    echo "$out" | sed 's/^/    /'
+    fail "Gate 8: wiki lint reported errors"
+  fi
+}
+
+# ----------------------------------------------------------------------
 # Bonus — Honesty section + zero stale-stub annotations
-# (not part of the 7 contributor gates, but cheap to check)
+# (not part of the 8 contributor gates, but cheap to check)
 # ----------------------------------------------------------------------
 gate_bonus_skill_integrity() {
   heading "Bonus — SKILL.md integrity + Honesty sections"
@@ -286,6 +310,7 @@ gate_4_karpathy_linked
 gate_5_cross_links
 gate_6_frontmatter
 gate_7_hook_yaml_syntax
+gate_8_wiki_lint
 gate_bonus_skill_integrity
 
 echo

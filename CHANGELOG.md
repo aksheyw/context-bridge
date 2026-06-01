@@ -4,7 +4,13 @@ All notable changes to context-bridge are documented here. The format follows [K
 
 ## [Unreleased]
 
-(Nothing pending — see [open issues](https://github.com/aksheyw/context-bridge/issues) for proposals.)
+### Added
+
+- **Gate 8 — wiki lint** (`scripts/wiki-lint.py`). Implements the v0.2 wiki lint specced in `skill/references/wiki-structure.md`: required frontmatter (`title:` + ISO `updated:`), broken `[[wiki-links]]`, and non-monotonic/duplicate finding IDs are errors; stale root-file `updated:` dates + orphan pages are warnings. Stdlib-only `python3`; flag-only (reports, never edits). Wired into `scripts/verify.sh` and CI; runs against the `ExampleApp` fixture with `--no-stale`.
+
+### Changed
+
+- **Gate numbering** — the CI-only shellcheck gate moves from gate 8 to **gate 9**; wiki-lint takes gate 8 (shared local + CI), matching the convention that counted gates are shared and shellcheck is the CI-only extra. "7 gates" → "8 gates" in `CONTRIBUTING.md` + `README.md`. `scripts/verify.sh`'s header comment ("gates 4-7 local-only") corrected — CI has enforced gates 4-7 since v0.1.1.
 
 ---
 

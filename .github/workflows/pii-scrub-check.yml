@@ -252,6 +252,19 @@ jobs:
           fi
           echo "Hook + workflow syntax gate OK."
 
+      - name: Wiki lint — ExampleApp fixture (gate 8)
+        shell: bash
+        run: |
+          set -euo pipefail
+          WIKI="examples/ExampleApp/.claude/wiki"
+          if [ ! -d "$WIKI" ]; then
+            echo "$WIKI not found — skipping wiki-lint gate."
+            exit 0
+          fi
+          # --no-stale: the shipped fixture is frozen; its dates age past 30 days by design.
+          python3 scripts/wiki-lint.py "$WIKI" --no-stale
+          echo "Wiki-lint gate OK."
+
       - name: Install shellcheck (macOS only — ubuntu has it pre-installed)
         if: runner.os == 'macOS'
         shell: bash
@@ -262,7 +275,7 @@ jobs:
             brew install shellcheck
           fi
 
-      - name: Shellcheck on pre-commit hook (gate 8)
+      - name: Shellcheck on pre-commit hook (gate 9)
         shell: bash
         # bash -n only catches syntax errors. shellcheck catches semantic bugs
         # (unquoted vars, broken array expansions, fragile pipes) of the same
