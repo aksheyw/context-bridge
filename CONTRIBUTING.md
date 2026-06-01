@@ -19,7 +19,7 @@ If something here doesn't match how the repo behaves, that's a bug — please op
 
 ## Gates — what every PR must pass
 
-All 7 gates are enforced by CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)) — a PR that fails them will block.
+All 8 gates are enforced by CI ([`.github/workflows/pii-scrub-check.yml`](.github/workflows/pii-scrub-check.yml)) — a PR that fails them will block.
 
 Run them locally before opening a PR with one command:
 
@@ -27,7 +27,7 @@ Run them locally before opening a PR with one command:
 scripts/verify.sh
 ```
 
-That runs all 7 gates (plus a bonus SKILL.md integrity check) and prints a summary. Exit code 0 means CI will also pass; exit 1 lists the failures with file/line context.
+That runs all 8 gates (plus a bonus SKILL.md integrity check) and prints a summary. Exit code 0 means CI will also pass; exit 1 lists the failures with file/line context.
 
 ### 1. No real secrets
 
@@ -65,6 +65,16 @@ YAML frontmatter at the top of SKILL.md and every `skill/commands/*.md`. Require
 bash -n .githooks/pre-commit
 python3 -c "import yaml; yaml.safe_load(open('.github/workflows/pii-scrub-check.yml'))"
 ```
+
+### 8. Wiki lint (example fixture)
+
+The shipped `examples/ExampleApp/.claude/wiki/` must stay valid against the conventions in [`skill/references/wiki-structure.md`](skill/references/wiki-structure.md): required frontmatter (`title:` + ISO `updated:`), no broken `[[wiki-links]]`, monotonic finding IDs.
+
+```bash
+python3 scripts/wiki-lint.py examples/ExampleApp/.claude/wiki --no-stale
+```
+
+Flag-only — it reports, never edits. CI runs it with `--no-stale` (the frozen fixture's dates age past 30 days by design). shellcheck is a CI-only gate (gate 9) — most macOS dev machines lack it.
 
 ---
 

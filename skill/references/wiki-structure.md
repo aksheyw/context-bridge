@@ -191,8 +191,13 @@ Extensions are project-local. They don't change the baseline; they document what
 
 ---
 
-## Linting (deferred — v0.2)
+## Linting
 
-A wiki lint will check: frontmatter presence + required fields, monotonic finding IDs, broken `[[wiki-links]]`, stale `updated:` dates (>30 days on root files), orphan files (no inbound links from any other page).
+`scripts/wiki-lint.py` checks this file's conventions: frontmatter presence + required fields (`title:` + ISO `updated:`), monotonic finding IDs, and broken `[[wiki-links]]` are **errors**; stale `updated:` dates (>30 days on root files) and orphan files (no inbound reference from any other page) are **warnings**. Flag-only — it reports, never edits.
 
-v0.1 has no automated lint; the conventions in this file are the spec.
+```bash
+python3 scripts/wiki-lint.py .claude/wiki             # lint your project's wiki
+python3 scripts/wiki-lint.py .claude/wiki --no-stale  # skip the staleness check
+```
+
+Exit 0 = no errors (warnings allowed), 1 = errors, 2 = usage error. CI runs it against the shipped `ExampleApp` fixture (gate 8) with `--no-stale`, since a frozen fixture's dates legitimately age past 30 days.

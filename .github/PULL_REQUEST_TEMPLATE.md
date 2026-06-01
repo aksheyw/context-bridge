@@ -21,6 +21,7 @@
 - [ ] If a `skill/references/<topic>.md` mentions Karpathy, it links the [LLM Wiki gist](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f) (not just "Karpathy").
 - [ ] All cross-links in `skill/SKILL.md` resolve.
 - [ ] Frontmatter on `skill/SKILL.md` + every `skill/commands/*.md` is present and valid.
+- [ ] If you touched the example wiki or wiki conventions, `python3 scripts/wiki-lint.py examples/ExampleApp/.claude/wiki --no-stale` passes.
 - [ ] CI `pii-scrub-check` workflow passes.
 
 ### Content

@@ -194,4 +194,4 @@ MIT — see [`LICENSE`](LICENSE). Vulnerability disclosure via GitHub Security A
 
 ## Contributing
 
-See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution flow + the 7 gates every PR must pass. Local gate runner: `scripts/verify.sh` runs all 7 with a single command.
+See [`CONTRIBUTING.md`](CONTRIBUTING.md) for the contribution flow + the 8 gates every PR must pass. Local gate runner: `scripts/verify.sh` runs all 8 with a single command.
