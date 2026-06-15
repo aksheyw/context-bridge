@@ -49,7 +49,7 @@ Between now and Day-14:
 ## Open blockers / questions
 
 - [ ] **PR [#2](https://github.com/aksheyw/context-bridge/pull/2) (Obsidian compat) awaiting merge** — the model can't merge to `main` (ship-gate); maintainer merges when CI is green.
-- [ ] **Day-14 retro 2026-06-09** — first signal check; decides keep-v0.1.x-patches vs pivot-to-launch-post.
+- [x] **Day-14 retro 2026-06-09** — logged 2026-06-15: 0 stars / 0 issues, but the launch post was never published (so 0 signal = 0 announcement); CI green + dogfood intact → continue v0.2, no hotfix. Full note in PR [#3](https://github.com/aksheyw/context-bridge/pull/3) (`docs/success-criteria.md`).
 - [ ] **Day-30 retro 2026-06-25** — formal evaluation per [`docs/success-criteria.md`](../../docs/success-criteria.md). Decision-branches: graduate Tier 2 → v0.2, OR investigate friction, OR sunset.
 
 ## Risks
