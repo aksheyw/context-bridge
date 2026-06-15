@@ -7,10 +7,12 @@ All notable changes to context-bridge are documented here. The format follows [K
 ### Added
 
 - **Gate 8 — wiki lint** (`scripts/wiki-lint.py`). Implements the v0.2 wiki lint specced in `skill/references/wiki-structure.md`: required frontmatter (`title:` + ISO `updated:`), broken `[[wiki-links]]`, and non-monotonic/duplicate finding IDs are errors; stale root-file `updated:` dates + orphan pages are warnings. Stdlib-only `python3`; flag-only (reports, never edits). Wired into `scripts/verify.sh` and CI; runs against the `ExampleApp` fixture with `--no-stale`.
+- **Obsidian-vault compatibility** (`docs/obsidian.md`): the wiki opens directly as an Obsidian vault — read pages, navigate the `[[link]]` graph, use `tags:`/`aliases:`. Documents the one setup rule (open `.claude/wiki/` *as* the vault, since Obsidian hides dot-folders), the body-links-for-graph convention (`skill/references/wiki-structure.md`), and a `.gitignore` guardrail for Obsidian's `.obsidian/` config (repo-wide + scaffolded by `/cb-init`). Additive; no wiki-schema change. Spec: [`docs/superpowers/specs/2026-06-15-obsidian-compat-design.md`](docs/superpowers/specs/2026-06-15-obsidian-compat-design.md).
 
 ### Changed
 
 - **Gate numbering** — the CI-only shellcheck gate moves from gate 8 to **gate 9**; wiki-lint takes gate 8 (shared local + CI), matching the convention that counted gates are shared and shellcheck is the CI-only extra. "7 gates" → "8 gates" in `CONTRIBUTING.md` + `README.md`. `scripts/verify.sh`'s header comment ("gates 4-7 local-only") corrected — CI has enforced gates 4-7 since v0.1.1.
+- **Gate 5 (cross-link check)** now skips `docs/superpowers/plans/` in both `scripts/verify.sh` and the CI workflow. Implementation plans contain illustrative markdown-link syntax inside code blocks; gate 5 doesn't parse code fences, so it flagged those as broken cross-links. Design specs stay linted.
 
 ---
 
