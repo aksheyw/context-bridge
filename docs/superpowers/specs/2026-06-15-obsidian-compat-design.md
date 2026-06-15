@@ -64,7 +64,7 @@ A focused compatibility guide covering:
 6. **What NOT to do** — don't author Obsidian-only syntax into wiki files; the lint + the LLM expect plain markdown (links to non-goals §1.3).
 
 ### D2 — Gitignore guardrail (two places)
-- **This repo:** add an `.obsidian/` section to [`.gitignore`](../../../.gitignore) using `**/.obsidian/` so opening either the repo's own wiki or `examples/ExampleApp/.claude/wiki/` in Obsidian never commits config churn.
+- **This repo:** add an `.obsidian/` section to [`.gitignore`](../../../.gitignore) using `.obsidian/` (matches a `.obsidian` directory at any depth) so opening either the repo's own wiki or `examples/ExampleApp/.claude/wiki/` in Obsidian never commits config churn.
 - **Adopter scaffold:** [`/cb-init`](../../../skill/commands/cb-init.md) Step 3 (greenfield + migrate paths) writes a self-contained `.claude/wiki/.gitignore` containing `.obsidian/`. Skip-if-exists, never overwrite — consistent with the command's existing idempotency contract. This keeps the guardrail local to the wiki dir and never mutates the adopter's root `.gitignore`.
 
 ### D3 — Graph-richness convention note
@@ -102,7 +102,7 @@ Flag for the (separate) launch post: "your wiki opens as an Obsidian vault." Rec
 | `.obsidian/` already committed before guardrail | `.gitignore` stops *future* churn; doc notes `git rm -r --cached .claude/wiki/.obsidian` to untrack existing. |
 | Project root `.gitignore` has no `.claude/` entry | Irrelevant — D2 writes `.claude/wiki/.gitignore`, self-contained. |
 | Adopter authors Obsidian callouts/embeds into a wiki page | Out of scope; `docs/obsidian.md` explicitly advises against it. Not lint-enforced in v0.2 (possible future). |
-| Adopter on a config-folder override (`.obsidian-*`) | `**/.obsidian/` won't match; doc notes the override case and that they own their own gitignore then. |
+| Adopter on a config-folder override (`.obsidian-*`) | `.obsidian/` won't match a renamed config folder; `docs/obsidian.md` notes the override case (add the custom name to the wiki `.gitignore`). |
 | `/cb-init` re-run (idempotent) | `.claude/wiki/.gitignore` skip-if-exists; no overwrite. |
 
 ---
@@ -111,7 +111,7 @@ Flag for the (separate) launch post: "your wiki opens as an Obsidian vault." Rec
 
 This is a docs + `.gitignore` + one-line convention change. Verification:
 
-- **Automated (must stay green):** `scripts/verify.sh` (all gates) + CI matrix. `wiki-lint.py` already errors on broken `[[links]]`, which is exactly what keeps the Obsidian graph valid — no new lint code required for v0.2.
+- **Automated (must stay green):** `scripts/verify.sh` (all gates) + CI matrix. `wiki-lint.py` already errors on broken `[[links]]`, which is exactly what keeps the Obsidian graph valid — no new lint code required for v0.2. (Implementation note: gate 5's cross-link walker was extended to skip `docs/superpowers/plans/` — plans contain illustrative link syntax inside code blocks — applied identically to `verify.sh` + CI for parity. No new gate was added.)
 - **Guardrail check:** confirm `git status` is clean after opening `examples/ExampleApp/.claude/wiki/` in Obsidian (i.e. `.obsidian/` is ignored). This is the one acceptance test that proves D2.
 - **Manual (documented, not automatable — Obsidian is a GUI app):** open `examples/ExampleApp/.claude/wiki/` as a vault; confirm (a) the file explorer shows the pages, (b) graph view shows body-link edges. Record the steps in `docs/obsidian.md` so any adopter can self-verify.
 - **No fabricated claims:** `docs/obsidian.md` states only behaviors verified in §2 (with citations). Anything version-dependent (behavior #4) is labeled as such.

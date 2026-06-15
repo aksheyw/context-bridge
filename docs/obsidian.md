@@ -13,6 +13,8 @@ Obsidian's file explorer hides dot-folders by default, with no reliable built-in
 
 In Obsidian: **Open folder as vault** → select `<your-project>/.claude/wiki/`.
 
+> **The OS folder picker hides dot-folders too.** When Obsidian's "Open folder as vault" dialog appears, you may not see `.claude/` at first. Reveal hidden folders in the dialog: macOS → press `Cmd+Shift+.`; most Linux file dialogs → press `Ctrl+H`; or paste/type the full path to `.claude/wiki/`. You can also drag the `.claude/wiki/` folder from a terminal onto Obsidian's vault picker.
+
 ## What works out of the box
 
 | Feature | Works? | Notes |
@@ -30,6 +32,7 @@ When you open the vault, Obsidian writes a `.obsidian/` config folder into it (h
 
 - This repo and `/cb-init`-scaffolded projects ship a `.gitignore` rule for `.obsidian/`.
 - Committed it by accident already? `git rm -r --cached .claude/wiki/.obsidian` then commit.
+- Renamed your config folder (Obsidian Settings → "Override config folder")? The default `.obsidian/` rule won't match a custom name — add it (e.g. `.obsidian-work/`) to `.claude/wiki/.gitignore` too.
 
 ## What NOT to do
 
