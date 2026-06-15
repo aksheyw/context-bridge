@@ -1,6 +1,6 @@
 ---
 title: Open Findings — Issues to Rectify
-updated: 2026-05-26
+updated: 2026-06-15
 ---
 
 # Open Findings
@@ -119,6 +119,8 @@ All 14 deep-review findings closed in commit `fe07468`. Captured here for tracea
 (No open findings. All 6 original (F1-F6) + 14 deep-review findings + 2 v0.1.2-flight findings (F7, F8) closed.)
 
 **Session 6 update (2026-05-26):** Two CI parity findings (F7, F8) surfaced during v0.1.2 polish and were closed in-flight. Both pattern: local check silently skipped on missing dep; only visible via cross-machine matrix CI. T2 candidate: make local skips loud.
+
+**Session 8 update (2026-06-15):** The Obsidian-vault compatibility build (v0.2, PR [#2](https://github.com/aksheyw/context-bridge/pull/2)) surfaced ~10 deep-review findings — all MEDIUM/LOW, **0 ship-stoppers** — closed in-flight: cb-init guardrail not backfilled on idempotent re-run; a fix that itself wrote during cb-init's read-only pre-flight; README doc-inventory stale (rippled to a pre-existing `success-criteria.md` omission); gate-5 false-positive on plan code-block links; spec `.obsidian/` drift. None remain open.
 
 **Distinction:** a *finding* is something wrong with the shipped product (correctness, security, attribution, drift). An *improvement* is a best-practice gap where the product is correct but could be more trustworthy / discoverable / contributor-friendly. Tier 1-3 are improvements; F7 and F8 are real findings (the product silently broke something it claimed).
 

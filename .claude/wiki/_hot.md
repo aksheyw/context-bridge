@@ -1,12 +1,12 @@
 ---
 title: Hot — Current Focus
-updated: 2026-06-01
-session: 7
+updated: 2026-06-15
+session: 8
 ---
 
 # 🔥 Hot — context-bridge
 
-**Session 7 closed 2026-06-01 — wiki-lint shipped as gate 8 (the deferred v0.2 lint).** PR [#1](https://github.com/aksheyw/context-bridge/pull/1) squash-merged to `main` `0ec07e0`; CI green ubuntu+macOS. (Session 6 2026-05-26: v0.1.2 Tier 1 polish + F7/F8.)
+**Session 8 (2026-06-15) — Obsidian-vault compatibility (v0.2) built; PR [#2](https://github.com/aksheyw/context-bridge/pull/2) open, awaiting merge.** Branch `feature/obsidian-compat` pushed; `verify.sh` 9/9; deep-review converged (5 rounds, 0 ship-stoppers). (Session 7 2026-06-01: wiki-lint gate 8 via PR [#1](https://github.com/aksheyw/context-bridge/pull/1) `0ec07e0`.)
 
 ## Current phase
 
@@ -37,7 +37,9 @@ Total: 8 commits on `feature/v0.1.2-polish` + 1 merge commit on `main`.
 
 ## Top tasks for next session
 
-**No automatic tasks.** Day-14 retro at 2026-06-09 is the next scheduled check; Day-30 retro at 2026-06-25 is the formal v0.1 evaluation — and the point to decide whether the `[Unreleased]` gate-8/wiki-lint work graduates into a tagged v0.2 (vs. holding).
+1. **Merge PR [#2](https://github.com/aksheyw/context-bridge/pull/2) (Obsidian compat)** once CI is green — lands the v0.2 obsidian work on `main` (still `[Unreleased]`, no tag).
+
+Beyond that, **no automatic tasks.** Day-14 retro at 2026-06-09 is the next scheduled check; Day-30 retro at 2026-06-25 is the formal v0.1 evaluation — and the point to decide whether the `[Unreleased]` gate-8/wiki-lint + obsidian-compat work graduates into a tagged v0.2 (vs. holding).
 
 Between now and Day-14:
 - Watch for adoption signal (stars / clones / issues / DMs per [`docs/success-criteria.md`](../../docs/success-criteria.md)).
@@ -46,6 +48,7 @@ Between now and Day-14:
 
 ## Open blockers / questions
 
+- [ ] **PR [#2](https://github.com/aksheyw/context-bridge/pull/2) (Obsidian compat) awaiting merge** — the model can't merge to `main` (ship-gate); maintainer merges when CI is green.
 - [ ] **Day-14 retro 2026-06-09** — first signal check; decides keep-v0.1.x-patches vs pivot-to-launch-post.
 - [ ] **Day-30 retro 2026-06-25** — formal evaluation per [`docs/success-criteria.md`](../../docs/success-criteria.md). Decision-branches: graduate Tier 2 → v0.2, OR investigate friction, OR sunset.
 

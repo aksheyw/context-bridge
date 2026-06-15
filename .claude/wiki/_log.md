@@ -1,11 +1,33 @@
 ---
 title: Session Log
-updated: 2026-05-26
+updated: 2026-06-15
 ---
 
 # Session Log
 
 Append-only. One entry per session. Reverse chronological.
+
+---
+
+## Session 8 — 2026-06-15 — Obsidian-vault compatibility (v0.2) built on a feature branch
+
+A pasted handoff claimed "the skill bundle still needs writing" — a ground-truth check showed v0.1.0–v0.1.2 already shipped (Session 7). Pivoted to scoping + building **Obsidian-vault compatibility** as a v0.2 item, in active co-pilot mode.
+
+### What was done — in order
+
+1. **Brainstorm → spec → plan** (superpowers workflow). Verified the load-bearing Obsidian behaviors against Obsidian help/forum *before* scoping: body `[[basename]]` links resolve (default "Shortest path when possible"); `.obsidian/` config churns + must be gitignored; `tags:`/`aliases:` are first-class properties; `related:` frontmatter links render as graph edges only finickily. **Load-bearing constraint:** Obsidian hides dot-folders → the wiki must be opened as `.claude/wiki/` *itself*, not the project root. Spec `docs/superpowers/specs/2026-06-15-obsidian-compat-design.md`; plan `docs/superpowers/plans/2026-06-15-obsidian-compat.md`.
+2. **Built (Option A — read+graph, scoped; no schema change):** `docs/obsidian.md` (the guide); `.obsidian/` gitignore guardrail (repo-wide + `/cb-init` scaffolds `.claude/wiki/.gitignore`, with a Step-5 backfill for already-initialised projects + an ExampleApp demo); body-links-for-graph note in `wiki-structure.md`; reframed 3 "use Obsidian instead" mentions + FAQ + cross-links; CHANGELOG `[Unreleased]`.
+3. **Gate-5 fix:** excluded `docs/superpowers/plans/` from the cross-link walker in `verify.sh` + CI (parity) — plans carry illustrative link syntax in code blocks.
+4. **Deep review:** 5 rounds, converged. ~10 findings, **0 ship-stoppers**, all fixed in-flight — including a fix that itself broke cb-init's read-only pre-flight contract, and a README ripple that exposed a pre-existing `success-criteria.md` inventory omission.
+
+### Findings
+None open. ~10 deep-review findings all closed in-flight (same "fix-in-flight" pattern as F7/F8).
+
+### Notes
+- Rolls into **v0.2** (maintainer decision) — no tag cut. Day-30 retro 2026-06-25 still decides v0.2 graduation.
+- `verify.sh` **9/9** green. Branch `feature/obsidian-compat` pushed; PR [#2](https://github.com/aksheyw/context-bridge/pull/2) open, awaiting merge.
+
+**Next:** see `_hot.md`.
 
 ---
 
