@@ -60,7 +60,7 @@ The skill exists because:
 - ❌ A team-knowledge system.
 - ❌ A code-aware retrieval layer.
 - ❌ An IDE plugin or MCP server.
-- ❌ A general-purpose note-taking tool. (Use Obsidian, Notion, Logseq, or your own.)
+- ❌ A general-purpose note-taking tool. (Use Obsidian, Notion, Logseq, or your own — though if you already use Obsidian, the wiki opens *as* a vault; see [`obsidian.md`](obsidian.md).)
 - ❌ A replacement for `git log`, `git blame`, or your code itself.
 
 If your need is in that list, this is the wrong tool — and that's fine.

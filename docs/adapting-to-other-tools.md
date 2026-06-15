@@ -8,7 +8,7 @@ This page is for users whose primary loop is Cursor / Aider / Codex / Continue /
 
 | Artifact | Tool-agnostic? | How to use it |
 |---|---|---|
-| The wiki shape (`_hot.md` / `_log.md` / `_findings.md` / `_schema.md` / `decisions/` / `gotchas/`) | ✅ Pure markdown | Create `.claude/wiki/` manually; copy templates from this repo's [`skill/templates/`](../skill/templates/). |
+| The wiki shape (`_hot.md` / `_log.md` / `_findings.md` / `_schema.md` / `decisions/` / `gotchas/`) | ✅ Pure markdown | Create `.claude/wiki/` manually; copy templates from this repo's [`skill/templates/`](../skill/templates/). Opens as an [Obsidian vault](obsidian.md) too. |
 | The 11-step save+sync protocol | ✅ Procedural | See [`skill/references/save-sync-protocol.md`](../skill/references/save-sync-protocol.md). Run it manually at session close — or wire it into your tool of choice. |
 | The handoff prompt template | ✅ Markdown prompt | See [`skill/references/handoff-template.md`](../skill/references/handoff-template.md). Paste into any model's input. |
 | The honesty rules in CLAUDE.md | ✅ Markdown contract | Copy [`skill/templates/CLAUDE.md.snippet`](../skill/templates/CLAUDE.md.snippet) into whatever instructions file your tool reads (`.cursor/rules`, `.aider.conf.yml` instructions, etc.). |

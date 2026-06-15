@@ -66,6 +66,10 @@ updated: YYYY-MM-DD
 
 Projects can declare additional optional fields in their `_schema.md`. Anything declared there is treated as expected; anything else triggers a lint warning.
 
+### Links and graph tools
+
+Cross-references you want visible in a graph tool (e.g. [Obsidian](../../docs/obsidian.md)) belong in the page **body** as `[[wiki-links]]`, not only in `related:` frontmatter. Body links render as graph edges everywhere; frontmatter links are metadata and may not render as edges in all tools.
+
 ---
 
 ## Page-type contracts

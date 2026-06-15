@@ -62,12 +62,13 @@ Greenfield path:
      - `YYYY-MM-DD` → today's date (ISO).
    - Write to `.claude/wiki/<filename>`.
    - If file already exists, **skip and report**. Never overwrite.
+3. Write `.claude/wiki/.gitignore` with the single line `.obsidian/` (so opening the wiki as an Obsidian vault never commits Obsidian's config — see context-bridge's `docs/obsidian.md`). If the file already exists, **skip and report**. Never overwrite.
 
 Existing-wiki path (when Step 1 detected a prior wiki):
 
 - Always preserve existing files. Only add what's missing.
-- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) and the context-bridge additions.
-- If user chose **adopt as-is**: write `_schema.md` only (and only if absent). No other files.
+- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) and the context-bridge additions. Also write `.claude/wiki/.gitignore` (`.obsidian/`) if absent — same skip-if-exists rule.
+- If user chose **adopt as-is**: write `_schema.md` only (and only if absent). No other wiki files (the `.obsidian/` guardrail `.gitignore` is still written in Step 5 — it's infrastructure, not wiki content).
 - If user chose **refuse**: stop here. Print "Aborted — no files changed."
 
 ## Step 4 — Append CLAUDE.md marked section
@@ -86,9 +87,11 @@ Skip if the marker `<!-- context-bridge:begin -->` is already in CLAUDE.md.
 3. If CLAUDE.md exists, append the snippet content (with one blank line before the marker). Never overwrite existing content.
 4. Report the byte count appended.
 
-## Step 5 — Print the 5-line tour
+## Step 5 — Backfill the Obsidian guardrail + print the 5-line tour
 
-Print exactly this (substituting `<project-name>`):
+First, if `.claude/wiki/.gitignore` is absent, write it now with the single line `.obsidian/` (backfills the Obsidian guardrail for projects initialised before it existed; on the greenfield/migrate paths Step 3 already wrote it, so this is a no-op). This runs after the user's Step 2 confirmation, so it never writes during pre-flight.
+
+Then print exactly this (substituting `<project-name>`):
 
 ```
 ✅ context-bridge initialised in <project-name>.

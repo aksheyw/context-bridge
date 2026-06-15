@@ -23,6 +23,10 @@ Thumbs.db
 # Personal-only wiki notes (per spec §9.3)
 .claude/wiki/*-private.md
 
+# Obsidian vault config — created when a .claude/wiki/ is opened as an Obsidian
+# vault (see docs/obsidian.md). Churns constantly (workspace.json); never commit.
+.obsidian/
+
 # Session handoff artifacts — local-only by design (FAQ option C, adopted Session 6 close)
 # The latest handoff is a warm-resume artifact for the next session on this machine; older
 # handoffs are git-log history and don't need to travel with the repo. See docs/faq.md §"SESSION_HANDOFF_*.md".

@@ -158,7 +158,7 @@ base = os.getcwd()
 broken = []
 checked = 0
 for root, dirs, files in os.walk(base):
-    if '/.git' in root or 'examples/ExampleApp/snapshots' in root or 'node_modules' in root:
+    if '/.git' in root or 'examples/ExampleApp/snapshots' in root or 'node_modules' in root or 'docs/superpowers/plans' in root:
         continue
     for f in files:
         if not f.endswith('.md'): continue

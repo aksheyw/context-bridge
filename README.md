@@ -31,7 +31,7 @@ After 6 months of dogfooding across multiple projects, I packaged the convention
 | `.githooks/pre-commit` | Opt-in entropy-required secret + `.cb-scrub-list` proper-noun scan; bash-3.2 portable | 163 |
 | `.github/workflows/pii-scrub-check.yml` | CI mirror of the hook + SKILL.md 200-line budget check | 132 |
 | `examples/ExampleApp/` | Fictional todo CLI with 3 session snapshots + full finding-lifecycle demo | ~1,100 |
-| `docs/` | 9 spillover docs: why, getting-started, install-verification, what-this-is-not, when-not-to-use, adapting-to-other-tools, vs-other-skills, compatibility, faq | ~860 |
+| `docs/` | 11 spillover docs: why, getting-started, install-verification, what-this-is-not, when-not-to-use, adapting-to-other-tools, vs-other-skills, compatibility, faq, success-criteria, obsidian | ~1,150 |
 | `LICENSE` | MIT | — |
 
 ## The standout: handoff prompts + honesty rules

@@ -58,7 +58,7 @@ If you primarily use one of those tools, the **methodology** still applies — s
 
 The wiki is shaped specifically for project-state continuity across coding sessions. It's not where your reading notes go, or your meeting minutes, or your personal journal.
 
-If you want a general PKM tool: Obsidian, Logseq, Notion, Bear, Apple Notes — pick one. context-bridge is happy to coexist; the wiki references those if useful, but doesn't try to be them.
+If you want a general PKM tool: Obsidian, Logseq, Notion, Bear, Apple Notes — pick one. context-bridge is happy to coexist; the wiki references those if useful, but doesn't try to be them. If Obsidian is your PKM, the wiki opens *as* an Obsidian vault — see [`obsidian.md`](obsidian.md).
 
 ---
 
