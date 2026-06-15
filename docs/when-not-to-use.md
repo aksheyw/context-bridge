@@ -75,7 +75,7 @@ context-bridge addresses *cross-session amnesia*. If your actual pain is one of 
 | "I can't track tasks across projects" | A proper task tracker (Linear, Things, Todoist) |
 | "My team doesn't know what I'm doing" | Standups, Slack, async written updates |
 
-See [`docs/what-this-is-not.md`](what-this-is-not.md) for the full non-goal list.
+See [`docs/what-this-is-not.md`](what-this-is-not.md) for the full non-goal list. (Already use Obsidian for notes? The wiki opens *as* an Obsidian vault — see [`obsidian.md`](obsidian.md). That's compatibility, not a change to any of the non-goals above.)
 
 ---
 

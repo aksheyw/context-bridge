@@ -50,6 +50,12 @@ See [`docs/adapting-to-other-tools.md`](adapting-to-other-tools.md).
 
 ---
 
+### Can I use this with Obsidian?
+
+Yes. The wiki is plain markdown with `[[wiki-links]]`, so `.claude/wiki/` opens directly as an Obsidian vault — read pages, navigate the graph, use tags. One gotcha: open `.claude/wiki/` *itself* as the vault (not the project root, since Obsidian hides dot-folders). Full guide: [`docs/obsidian.md`](obsidian.md).
+
+---
+
 ### What if I already have a `.claude/wiki/` from another setup?
 
 `/cb-init` detects it and asks: **migrate**, **adopt as-is**, or **refuse**. Nothing is touched until you choose.
