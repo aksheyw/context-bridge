@@ -18,16 +18,21 @@ A pasted handoff claimed "the skill bundle still needs writing" — a ground-tru
 1. **Brainstorm → spec → plan** (superpowers workflow). Verified the load-bearing Obsidian behaviors against Obsidian help/forum *before* scoping: body `[[basename]]` links resolve (default "Shortest path when possible"); `.obsidian/` config churns + must be gitignored; `tags:`/`aliases:` are first-class properties; `related:` frontmatter links render as graph edges only finickily. **Load-bearing constraint:** Obsidian hides dot-folders → the wiki must be opened as `.claude/wiki/` *itself*, not the project root. Spec `docs/superpowers/specs/2026-06-15-obsidian-compat-design.md`; plan `docs/superpowers/plans/2026-06-15-obsidian-compat.md`.
 2. **Built (Option A — read+graph, scoped; no schema change):** `docs/obsidian.md` (the guide); `.obsidian/` gitignore guardrail (repo-wide + `/cb-init` scaffolds `.claude/wiki/.gitignore`, with a Step-5 backfill for already-initialised projects + an ExampleApp demo); body-links-for-graph note in `wiki-structure.md`; reframed 3 "use Obsidian instead" mentions + FAQ + cross-links; CHANGELOG `[Unreleased]`.
 3. **Gate-5 fix:** excluded `docs/superpowers/plans/` from the cross-link walker in `verify.sh` + CI (parity) — plans carry illustrative link syntax in code blocks.
-4. **Deep review:** 5 rounds, converged. ~10 findings, **0 ship-stoppers**, all fixed in-flight — including a fix that itself broke cb-init's read-only pre-flight contract, and a README ripple that exposed a pre-existing `success-criteria.md` inventory omission.
+4. **Deep review:** 5 rounds, converged. ~10 findings, **0 ship-stoppers**, all fixed in-flight — including a fix that itself broke cb-init's read-only pre-flight contract, and a README ripple that exposed a pre-existing `success-criteria.md` inventory omission. The gate-5 code-block false-positive is captured as a gotcha → [`gotchas/gotcha-gate5-codeblock-links.md`](gotchas/gotcha-gate5-codeblock-links.md).
+5. **OG social-preview image (T2-5):** designed + rendered `docs/assets/og-image.{html,png}` (1280×640) via headless Chrome; **verified the real pixels by eye** (the impeccable-UI detector's contrast flags were false positives — it misread the dark gradient bg as white). Dark dev aesthetic, Claude-ecosystem accent `#d9775c`, faint `[[ ]]` wikilink motif. Render recipe + the 12-repo rollout plan → memory `og-image-rollout-plan.md`.
+6. **Day-14 signal check** logged in `docs/success-criteria.md` (6 days late): 0 stars / 0 issues, CI green, dogfood intact. Key read: the launch post was **never published**, so 0 external signal = 0 announcement (not a failed hook). No hotfix (Branch C not triggered); continue v0.2 per the dogfood rule.
+7. **Shipped both PRs to `main`** (Akshey explicitly authorized): [#2](https://github.com/aksheyw/context-bridge/pull/2) obsidian `451809c` + [#3](https://github.com/aksheyw/context-bridge/pull/3) OG/retro `112fba6`, squash-merged through green branch protection. The authorized `gh pr merge` of a gate-green PR is a *gated* merge (server-side, checks enforced), **not** a ship-gate bypass; direct `git push` to `main` stays blocked.
+8. **OG rollout planned** for next session across all 12 public repos (brainstorm form-factor first) — memory `og-image-rollout-plan.md`.
 
 ### Findings
-None open. ~10 deep-review findings all closed in-flight (same "fix-in-flight" pattern as F7/F8).
+None open. ~10 deep-review findings all closed in-flight (same "fix-in-flight" pattern as F7/F8). One promoted to a gotcha: [`gotchas/gotcha-gate5-codeblock-links.md`](gotchas/gotcha-gate5-codeblock-links.md). Scope rationale recorded in [`decisions/d-2026-06-15-obsidian-compat-scope.md`](decisions/d-2026-06-15-obsidian-compat-scope.md).
 
 ### Notes
-- Rolls into **v0.2** (maintainer decision) — no tag cut. Day-30 retro 2026-06-25 still decides v0.2 graduation.
-- `verify.sh` **9/9** green. Branch `feature/obsidian-compat` pushed; PR [#2](https://github.com/aksheyw/context-bridge/pull/2) open, awaiting merge.
+- All v0.2 work (gate-8 wiki-lint S7 + obsidian compat + OG image S8) sits in CHANGELOG `[Unreleased]` — **no tag cut**. Day-30 retro 2026-06-25 decides v0.2 graduation.
+- `verify.sh` **9/9** green throughout. Workflow: brainstorm → spec → plan → TDD (gitignore guardrail) → deep-review → PR → authorized merge.
+- **Non-destructive:** every change additive (new files / doc edits / one gate-walker exclusion). The only deletions were merged feature branches (git refs, not content). Git history stays clean.
 
-**Next:** see `_hot.md`.
+**Next:** see `_hot.md` — OG rollout brainstorm + Day-30 retro.
 
 ---
 
