@@ -75,6 +75,24 @@ Two real-world decision branches:
 
 ---
 
+## Day-14 signal check — 2026-06-09 (logged 2026-06-15, 6 days late)
+
+Snapshot at logging time:
+
+| Signal | Target | Actual |
+|---|---|---|
+| Stars | ≥ 2 | 0 |
+| Issues | ≥ 1 | 0 |
+| Broken-install reports | 0 | 0 ✓ |
+| CI on `main` | green | green ✓ |
+| Author dogfood | intact | intact ✓ (Sessions 7–8 ran `/cb-save-sync` on this repo's own wiki) |
+
+**Reading:** the "stars < 2 and 0 issues" rule would say "the launch post didn't land." But the launch post was **never published** — Path A queued it at Session 6, and Sessions 7 (wiki-lint) and 8 (Obsidian compat) did build work instead. So 0 external signal reflects *0 announcement*, not a failed hook. The day-14 rules (written at v0.1.1) also predate v0.1.2 shipping; treat them as a lightweight tripwire, not the formal retro.
+
+**Decision:** No hotfix — Branch C not triggered (0 broken-install reports, CI green). Author dogfood intact → continue v0.2 per the dogfood rule (Obsidian compat shipped to PR #2). Launch announcement deferred; the custom social-preview image (T2-5) was prepared this session (`docs/assets/og-image.png`) so the repo previews well whenever it is shared. Formal evaluation remains Day-30 (2026-06-25).
+
+---
+
 ## What this doc is NOT
 
 - ❌ A growth plan. context-bridge is a methodology, not a product.

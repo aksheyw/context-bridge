@@ -1,0 +1,86 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 1280px; height: 640px; }
+  body {
+    font-family: "Helvetica Neue", Arial, sans-serif;
+    background: radial-gradient(135% 150% at 0% 0%, #1b2433 0%, #0d1117 56%, #080b10 100%);
+    color: #e6edf3;
+    overflow: hidden;
+    position: relative;
+  }
+  /* faint [[ ]] wikilink watermark — the wiki's own link syntax */
+  .watermark {
+    position: absolute;
+    right: 36px; bottom: -60px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 460px; font-weight: 700;
+    color: #d9775c;
+    opacity: 0.07;
+    letter-spacing: 8px;
+    z-index: 1;
+    white-space: nowrap;
+  }
+  .wrap {
+    position: relative; z-index: 2;
+    height: 100%;
+    padding: 76px 84px;
+    display: flex; flex-direction: column; justify-content: space-between;
+  }
+  .eyebrow {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 21px; font-weight: 600;
+    letter-spacing: 0.22em; text-transform: uppercase;
+    color: #d9775c;
+  }
+  .title {
+    font-size: 108px; font-weight: 800;
+    letter-spacing: -0.035em; line-height: 1;
+    margin-top: 16px;
+  }
+  .title .accent { color: #d9775c; }
+  .headline {
+    font-size: 44px; font-weight: 600; line-height: 1.16;
+    margin-top: 34px; max-width: 1010px; color: #f4f7fb;
+  }
+  .headline .hl { color: #d9775c; }
+  .sub {
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 23px; line-height: 1.5; color: #9bacc0;
+    margin-top: 20px; max-width: 920px;
+  }
+  .foot {
+    display: flex; align-items: center; gap: 20px;
+    font-family: "SF Mono", "Menlo", monospace;
+    font-size: 22px; color: #6f8197;
+  }
+  .foot .url { color: #cdd9e5; font-weight: 600; }
+  .foot .sep { color: #3f4b5c; }
+  .foot .pill {
+    border: 1px solid #2b3645;
+    border-radius: 999px; padding: 7px 16px;
+    color: #9bacc0; font-size: 19px;
+  }
+</style>
+</head>
+<body>
+  <div class="watermark">[[ ]]</div>
+  <div class="wrap">
+    <div>
+      <div class="eyebrow">A Claude Code skill</div>
+      <div class="title">context<span class="accent">-bridge</span></div>
+      <div class="headline">Resume any Claude Code session in <span class="hl">30&nbsp;seconds</span>, not 30&nbsp;minutes.</div>
+      <div class="sub">A small per-project wiki + a generated handoff prompt — stop cross-session amnesia.</div>
+    </div>
+    <div class="foot">
+      <span class="url">github.com/aksheyw/context-bridge</span>
+      <span class="sep">·</span>
+      <span class="pill">MIT</span>
+      <span class="pill">open source</span>
+    </div>
+  </div>
+</body>
+</html>
