@@ -62,11 +62,12 @@ Greenfield path:
      - `YYYY-MM-DD` → today's date (ISO).
    - Write to `.claude/wiki/<filename>`.
    - If file already exists, **skip and report**. Never overwrite.
+3. Write `.claude/wiki/.gitignore` with the single line `.obsidian/` (so opening the wiki as an Obsidian vault never commits Obsidian's config — see `docs/obsidian.md`). If the file already exists, **skip and report**. Never overwrite.
 
 Existing-wiki path (when Step 1 detected a prior wiki):
 
 - Always preserve existing files. Only add what's missing.
-- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) and the context-bridge additions.
+- If user chose **migrate**: scaffold `_hot.md` + `_findings.md` only if absent. Update `_schema.md` to note both the prior convention (e.g. [Karpathy LLMwiki](https://gist.github.com/karpathy/442a6bf555914893e9891c11519de94f)) and the context-bridge additions. Also write `.claude/wiki/.gitignore` (`.obsidian/`) if absent — same skip-if-exists rule.
 - If user chose **adopt as-is**: write `_schema.md` only (and only if absent). No other files.
 - If user chose **refuse**: stop here. Print "Aborted — no files changed."
 
